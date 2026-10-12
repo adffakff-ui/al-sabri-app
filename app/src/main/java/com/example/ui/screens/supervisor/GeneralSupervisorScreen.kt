@@ -88,6 +88,7 @@ import com.example.data.model.QuranHalaqatData
 import com.example.data.model.RecitationRecord
 import com.example.ui.components.HeroQuranBanner
 import com.example.ui.components.StatCard
+import com.example.ui.screens.attendance.AttendanceReportsScreen
 import com.example.ui.theme.QuranEmeraldDark
 import com.example.ui.theme.QuranEmeraldLight
 import com.example.ui.theme.QuranEmeraldPrimary
@@ -123,9 +124,18 @@ fun GeneralSupervisorScreen(
   var selectedTab by remember { mutableIntStateOf(0) }
   var currentlyPlayingUrl by remember { mutableStateOf<String?>(null) }
   var showAnnouncementDialog by remember { mutableStateOf(false) }
+  var showAttendanceScreen by remember { mutableStateOf(false) }
   var announcementTitle by remember { mutableStateOf("") }
   var announcementBody by remember { mutableStateOf("") }
   var announcementSentFeedback by remember { mutableStateOf(false) }
+
+  if (showAttendanceScreen) {
+    AttendanceReportsScreen(
+      viewModel = viewModel,
+      onBack = { showAttendanceScreen = false }
+    )
+    return
+  }
 
   val presentStudentsCount = attendance.count { it.status == "حاضر" }
   val attendanceRate = if (students.isNotEmpty()) {
@@ -295,6 +305,59 @@ fun GeneralSupervisorScreen(
           bgColor = Color(0xFFEFF6FF),
           modifier = Modifier.weight(1f)
         )
+      }
+    }
+
+    // Direct Access to Daily Attendance Reports & FCM Absence Alerts
+    item {
+      Card(
+        modifier = Modifier
+          .fillMaxWidth()
+          .clickable { showAttendanceScreen = true },
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0FDF4)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+      ) {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+              modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF16A34A)),
+              contentAlignment = Alignment.Center
+            ) {
+              Icon(imageVector = Icons.Default.CheckCircle, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Column {
+              Text(
+                text = "تقارير الحضور والغياب الميداني وتنبيهات FCM",
+                fontWeight = FontWeight.Bold,
+                fontSize = 13.sp,
+                color = Color(0xFF14532D)
+              )
+              Text(
+                text = "رصد فوري لجميع حلقات البنين والبنات مع إمكانية التصفية التاريخية",
+                fontSize = 11.sp,
+                color = Color(0xFF15803D)
+              )
+            }
+          }
+          Button(
+            onClick = { showAttendanceScreen = true },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A)),
+            shape = RoundedCornerShape(8.dp)
+          ) {
+            Text("فتح التقرير 📋", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+          }
+        }
       }
     }
 

@@ -18,5 +18,6 @@ data class Student(
   val memorizedJuzCount: Int = 3,
   val avatarColorHex: Long = 0xFF0D6850,
   val notes: String = "",
+  val isGirlsSection: Boolean = false,
   val createdAt: Long = System.currentTimeMillis()
 )

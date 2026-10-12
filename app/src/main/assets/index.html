@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم</title>
+  <meta name="description" content="نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم">
+  <meta name="theme-color" content="#0F5132">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  
+  <style>
+    :root {
+      --primary: #0F5132;
+      --primary-dark: #074333;
+      --gold: #C99700;
+      --bg: #F8F9FA;
+      --card-bg: #FFFFFF;
+      --text: #212529;
+      --text-muted: #6C757D;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #E2E8F0;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(201, 151, 0, 0.25);
+      border: 1px solid var(--gold);
+      color: #FFD700;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: -2rem auto 3rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature-item {
+      padding: 1.25rem;
+      background: #F1F5F9;
+      border-radius: 12px;
+      border-right: 4px solid var(--primary);
+    }
+
+    .feature-item h3 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-item p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(15, 81, 50, 0.3);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid #E2E8F0;
+    }
+
+    pre {
+      background: #1E293B;
+      color: #F8FAFC;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.85rem;
+      text-align: left;
+      direction: ltr;
+    }
+  </style>
+
+  <script type="application/json" id="manifest-data">
+  {
+    "name": "حلقات هائل سعيد أنعم",
+    "short_name": "حلقات القرآن",
+    "description": "نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0F5132",
+    "theme_color": "#0F5132",
+    "icons": [
+      {
+        "src": "/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header>
+    <img src="/icon-192.png" alt="شعار حلقات هائل سعيد أنعم" class="logo">
+    <h1>حلقات هائل سعيد أنعم</h1>
+    <p class="subtitle">نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم والرقابة الإشرافية</p>
+    <div class="badge">المزامنة الفورية • صلاحيات مقيدة • تنبيهات FCM التلقائية</div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2 style="color: var(--primary); margin-bottom: 0.75rem;">نبذة عن التطبيق والمنظومة القرآنية</h2>
+      <p style="color: #475569; margin-bottom: 1.5rem;">
+        تطبيق رسمي متكامل لإدارة حلقات تحفيظ القرآن الكريم بمجمع هائل سعيد أنعم. يوفر نظاماً متطوراً لإدارة الحلقات والطلاب، رصد التسميع اليومي مع التسجيل الصوتي، جدول مواعيد التسميع التلقائي عبر Firebase Cloud Messaging، توثيق القراءات العشر لكافة المذاهب الإسلامية، ومحرك مزامنة عالي السرعة.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <h3>📅 جدولة مواعيد التسميع وتنبيهات FCM</h3>
+          <p>تحديد مواعيد التسميع المستهدفة للطلاب وإرسال إشعارات تلقائية فورية للطالب وولي أمره عبر Firebase Cloud Messaging.</p>
+        </div>
+        <div class="feature-item">
+          <h3>⚡ محرك المزامنة اللحظي</h3>
+          <p>تخزين سحابي ومحلي فائق السرعة عبر الذاكرة السريعة مع مؤشر مزامنة فوري بنسبة تسريع 3.8x.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🔒 نظام الصلاحيات المقيدة (RBAC)</h3>
+          <p>تقييد صلاحيات كل قسم (المعلم، الطالب، ولي الأمر، قسم الحلقات) وغلق باقي أقسام التطبيق لضمان الأمان والخصوصية.</p>
+        </div>
+        <div class="feature-item">
+          <h3>⭐ قسم المشرف العام</h3>
+          <p>لوحة تحكم تنفيذية بكامل الصلاحيات والرقابة العامة وإصدار التعاميم ومتابعة أداء المعلمين والطلاب.</p>
+        </div>
+        <div class="feature-item">
+          <h3>📖 القراءات العشر والمذاهب الإسلامية</h3>
+          <p>موسوعة الأئمة العشرة ورواتهم العشرين مع بيان إجماع سائر المذاهب الإسلامية على تواترها وصحة الصلاة بها.</p>
+        </div>
+        <div class="feature-item">
+          <h3>🎙️ تقييم التسميع والتسجيل الصوتي</h3>
+          <p>تسجيل صوتي عالي النقاء للطالب وربطه بنخبة من كبار القراء لتحديد مستوى الطالب التجويدي بدقة.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="color: var(--primary); margin-bottom: 1rem;">إعدادات وتكامل GitHub & PWA</h2>
+      <p style="color: #475569; margin-bottom: 1rem;">
+        بيانات ملف التكوين والـ Manifest المعتمدة للمشروع:
+      </p>
+      <pre><code>{
+  "name": "حلقات هائل سعيد أنعم",
+  "short_name": "حلقات القرآن",
+  "description": "نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F5132",
+  "theme_color": "#0F5132",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}</code></pre>
+    </div>
+  </div>
+
+  <footer>
+    <p>جميع الحقوق محفوظة © مجمع حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم</p>
+  </footer>
+
+</body>
+</html>

@@ -61,6 +61,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.model.HalaqahSection
 import com.example.data.model.MockHalaqatData
 import com.example.data.model.QuranHalaqah
 import com.example.ui.components.HeroQuranBanner
@@ -81,19 +83,25 @@ fun CirclesScreen(
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
+  val allHalaqat by viewModel.scopedHalaqat.collectAsStateWithLifecycle()
   var searchQuery by remember { mutableStateOf("") }
   var selectedTimeFilter by remember { mutableStateOf("الكل") }
+  var selectedSectionFilter by remember { mutableStateOf("الكل") }
   var selectedHalaqahForDetails by remember { mutableStateOf<QuranHalaqah?>(null) }
 
   val timeFilters = listOf("الكل", "بعد العصر", "بعد المغرب", "بعد الفجر", "بعد العشاء")
-
-  // Mock list of halaqat
-  val allHalaqat = MockHalaqatData.halaqatList
+  val sectionFilters = listOf("الكل", "قسم البنين 👦", "قسم البنات 👧")
 
   val filteredHalaqat = allHalaqat.filter { halaqah ->
     val matchesSearch = halaqah.name.contains(searchQuery, ignoreCase = true) ||
         halaqah.teacherName.contains(searchQuery, ignoreCase = true) ||
         halaqah.location.contains(searchQuery, ignoreCase = true)
+
+    val matchesSection = when (selectedSectionFilter) {
+      "قسم البنين 👦" -> halaqah.section == HalaqahSection.BOYS
+      "قسم البنات 👧" -> halaqah.section == HalaqahSection.GIRLS
+      else -> true
+    }
 
     val matchesFilter = when (selectedTimeFilter) {
       "الكل" -> true
@@ -103,7 +111,7 @@ fun CirclesScreen(
       "بعد العشاء" -> halaqah.timeSlot.contains("العشاء")
       else -> true
     }
-    matchesSearch && matchesFilter
+    matchesSearch && matchesSection && matchesFilter
   }
 
   val totalStudents = allHalaqat.sumOf { it.studentCount }
@@ -174,6 +182,25 @@ fun CirclesScreen(
             unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
           )
         )
+
+        // Section Filters Row (Boys / Girls / All)
+        LazyRow(
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          items(sectionFilters) { sec ->
+            val isSelected = selectedSectionFilter == sec
+            val isGirls = sec.contains("بنات")
+            FilterChip(
+              selected = isSelected,
+              onClick = { selectedSectionFilter = sec },
+              label = { Text(sec, fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+              colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = if (isGirls) Color(0xFFBE185D) else QuranEmeraldPrimary,
+                selectedLabelColor = Color.White
+              )
+            )
+          }
+        }
 
         // Time Filters Row
         LazyRow(

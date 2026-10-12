@@ -55,6 +55,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.components.AttendanceStatusBadge
 import com.example.ui.components.EvaluationBadge
 import com.example.ui.components.HeroQuranBanner
+import com.example.ui.components.StudentProgressChartsCard
 import com.example.ui.theme.QuranEmeraldDark
 import com.example.ui.theme.QuranEmeraldLight
 import com.example.ui.theme.QuranEmeraldPrimary
@@ -71,7 +72,7 @@ fun ParentScreen(
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
-  val students by viewModel.students.collectAsStateWithLifecycle()
+  val students by viewModel.scopedStudents.collectAsStateWithLifecycle()
   val selectedStudent by viewModel.selectedStudent.collectAsStateWithLifecycle()
   val recitations by viewModel.recitations.collectAsStateWithLifecycle()
   val attendance by viewModel.attendance.collectAsStateWithLifecycle()
@@ -237,6 +238,11 @@ fun ParentScreen(
             }
           }
         }
+      }
+
+      // Recharts-style Visual Progress Analytics for Parents
+      item {
+        StudentProgressChartsCard(student = student)
       }
 
       // Teacher Notifications Section

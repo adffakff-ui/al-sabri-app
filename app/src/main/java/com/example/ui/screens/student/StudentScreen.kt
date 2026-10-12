@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
@@ -52,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.components.HeroQuranBanner
 import com.example.ui.components.RecitationRecordCard
 import com.example.ui.components.StatCard
+import com.example.ui.components.StudentProgressChartsCard
 import com.example.ui.theme.QuranEmeraldDark
 import com.example.ui.theme.QuranEmeraldLight
 import com.example.ui.theme.QuranEmeraldPrimary
@@ -67,10 +69,11 @@ fun StudentScreen(
   modifier: Modifier = Modifier
 ) {
   val context = LocalContext.current
-  val students by viewModel.students.collectAsStateWithLifecycle()
+  val students by viewModel.scopedStudents.collectAsStateWithLifecycle()
   val selectedStudent by viewModel.selectedStudent.collectAsStateWithLifecycle()
   val recitations by viewModel.recitations.collectAsStateWithLifecycle()
   val attendance by viewModel.attendance.collectAsStateWithLifecycle()
+  val schedules by viewModel.schedules.collectAsStateWithLifecycle()
 
   var isStudentDropdownExpanded by remember { mutableStateOf(false) }
 
@@ -294,6 +297,11 @@ fun StudentScreen(
             )
           }
         }
+      }
+
+      // Recharts-style Visual Progress Analytics
+      item {
+        StudentProgressChartsCard(student = student)
       }
 
       // Recitation History Header

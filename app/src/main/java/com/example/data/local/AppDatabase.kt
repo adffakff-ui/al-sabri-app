@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.data.model.AttendanceRecord
 import com.example.data.model.ParentNotification
 import com.example.data.model.RecitationRecord
+import com.example.data.model.RecitationSchedule
 import com.example.data.model.Student
 
 @Database(
@@ -14,9 +15,10 @@ import com.example.data.model.Student
     Student::class,
     AttendanceRecord::class,
     RecitationRecord::class,
-    ParentNotification::class
+    ParentNotification::class,
+    RecitationSchedule::class
   ],
-  version = 2,
+  version = 4,
   exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -24,6 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun attendanceDao(): AttendanceDao
   abstract fun recitationDao(): RecitationDao
   abstract fun notificationDao(): NotificationDao
+  abstract fun scheduleDao(): ScheduleDao
 
   companion object {
     @Volatile

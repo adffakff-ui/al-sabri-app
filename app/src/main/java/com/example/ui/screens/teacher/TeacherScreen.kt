@@ -21,10 +21,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Equalizer
+import androidx.compose.material.icons.filled.FactCheck
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Grade
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -59,13 +63,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.model.RecitationSchedule
 import com.example.data.model.Student
 import com.example.ui.components.AddStudentDialog
 import com.example.ui.components.AttendanceDialog
 import com.example.ui.components.HeroQuranBanner
 import com.example.ui.components.RecitationEvaluationDialog
+import com.example.ui.components.ScheduleRecitationDialog
 import com.example.ui.components.StatCard
 import com.example.ui.components.StudentCard
+import com.example.ui.components.StudentProgressChartsCard
+import com.example.ui.screens.attendance.AttendanceReportsScreen
 import com.example.ui.theme.QuranEmeraldDark
 import com.example.ui.theme.QuranEmeraldLight
 import com.example.ui.theme.QuranEmeraldPrimary
@@ -86,17 +94,29 @@ fun TeacherScreen(
   val scope = rememberCoroutineScope()
   val snackbarHostState = remember { SnackbarHostState() }
 
-  val students by viewModel.students.collectAsStateWithLifecycle()
+  val students by viewModel.scopedStudents.collectAsStateWithLifecycle()
   val attendance by viewModel.attendance.collectAsStateWithLifecycle()
   val recitations by viewModel.recitations.collectAsStateWithLifecycle()
+  val schedules by viewModel.schedules.collectAsStateWithLifecycle()
   val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
   val selectedGroup by viewModel.selectedGroup.collectAsStateWithLifecycle()
 
   var showAddDialog by remember { mutableStateOf(false) }
+  var showScheduleDialog by remember { mutableStateOf(false) }
   var showEvaluationForm by remember { mutableStateOf(false) }
+  var showAttendanceReports by remember { mutableStateOf(false) }
+  var showProgressCharts by remember { mutableStateOf(false) }
   var studentForRecitation by remember { mutableStateOf<Student?>(null) }
   var studentForAttendance by remember { mutableStateOf<Student?>(null) }
   var studentToEdit by remember { mutableStateOf<Student?>(null) }
+
+  if (showAttendanceReports) {
+    AttendanceReportsScreen(
+      viewModel = viewModel,
+      onBack = { showAttendanceReports = false }
+    )
+    return
+  }
 
   val groups = listOf("الكل", "حلقة عثمان بن عفان", "حلقة علي بن أبي طالب", "حلقة أبي بكر الصديق")
 
@@ -241,6 +261,271 @@ fun TeacherScreen(
         }
       }
 
+      // Recitation Scheduling Banner & FCM Auto Alerts
+      item {
+        Card(
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showScheduleDialog = true }
+            .testTag("schedule_action_card"),
+          shape = RoundedCornerShape(16.dp),
+          colors = CardDefaults.cardColors(containerColor = QuranGoldLight),
+          elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+          Row(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.weight(1f)
+            ) {
+              Box(
+                modifier = Modifier
+                  .size(44.dp)
+                  .clip(CircleShape)
+                  .background(QuranGoldSecondary),
+                contentAlignment = Alignment.Center
+              ) {
+                Icon(
+                  imageVector = Icons.Default.Campaign,
+                  contentDescription = null,
+                  tint = Color(0xFF382900),
+                  modifier = Modifier.size(24.dp)
+                )
+              }
+              Spacer(modifier = Modifier.width(12.dp))
+              Column {
+                Text(
+                  text = "جدولة مواعيد التسميع وتنبيهات FCM",
+                  style = MaterialTheme.typography.titleMedium,
+                  fontWeight = FontWeight.Bold,
+                  color = Color(0xFF4A3700),
+                  fontSize = 14.sp
+                )
+                Text(
+                  text = "تحديد الموعد وإرسال إشعار فوري تلقائي للطالب وولي أمره",
+                  style = MaterialTheme.typography.bodySmall,
+                  color = Color(0xFF6B4E00),
+                  fontSize = 11.sp
+                )
+              }
+            }
+            Button(
+              onClick = { showScheduleDialog = true },
+              colors = ButtonDefaults.buttonColors(containerColor = QuranEmeraldPrimary),
+              shape = RoundedCornerShape(10.dp)
+            ) {
+              Text("جدولة موعد 📅", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+            }
+          }
+        }
+      }
+
+      // Attendance Reports & FCM Absence Alerts Card
+      item {
+        Card(
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showAttendanceReports = true }
+            .testTag("attendance_reports_action_card"),
+          shape = RoundedCornerShape(16.dp),
+          colors = CardDefaults.cardColors(containerColor = Color(0xFFF0FDF4)),
+          elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+          Row(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.weight(1f)
+            ) {
+              Box(
+                modifier = Modifier
+                  .size(44.dp)
+                  .clip(CircleShape)
+                  .background(Color(0xFF16A34A)),
+                contentAlignment = Alignment.Center
+              ) {
+                Icon(
+                  imageVector = Icons.Default.FactCheck,
+                  contentDescription = null,
+                  tint = Color.White,
+                  modifier = Modifier.size(24.dp)
+                )
+              }
+              Spacer(modifier = Modifier.width(12.dp))
+              Column {
+                Text(
+                  text = "تقارير الحضور والغياب وتنبيهات FCM",
+                  style = MaterialTheme.typography.titleMedium,
+                  fontWeight = FontWeight.Bold,
+                  color = Color(0xFF14532D),
+                  fontSize = 14.sp
+                )
+                Text(
+                  text = "تصفية حسب التاريخ والحلقة وإرسال تنبيهات غياب فورية للأولياء",
+                  style = MaterialTheme.typography.bodySmall,
+                  color = Color(0xFF15803D),
+                  fontSize = 11.sp
+                )
+              }
+            }
+            Button(
+              onClick = { showAttendanceReports = true },
+              colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A)),
+              shape = RoundedCornerShape(10.dp)
+            ) {
+              Text("عرض التقرير 📋", fontWeight = FontWeight.Bold, fontSize = 11.sp)
+            }
+          }
+        }
+      }
+
+      // Student Progress Charts Card (Recharts style)
+      item {
+        Column(modifier = Modifier.fillMaxWidth()) {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+              Icon(imageVector = Icons.Default.Equalizer, contentDescription = null, tint = QuranEmeraldPrimary, modifier = Modifier.size(18.dp))
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = "الرسوم البيانية لمستوى تقدم الطلاب (Recharts)",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = QuranEmeraldDark
+              )
+            }
+            Button(
+              onClick = { showProgressCharts = !showProgressCharts },
+              colors = ButtonDefaults.buttonColors(
+                containerColor = if (showProgressCharts) QuranGoldSecondary else QuranEmeraldPrimary
+              ),
+              shape = RoundedCornerShape(8.dp),
+              modifier = Modifier.height(32.dp)
+            ) {
+              Text(if (showProgressCharts) "إخفاء الرسم" else "عرض الرسم 📊", fontSize = 11.sp)
+            }
+          }
+
+          if (showProgressCharts) {
+            Spacer(modifier = Modifier.height(8.dp))
+            StudentProgressChartsCard(student = filteredStudents.firstOrNull())
+          }
+        }
+      }
+
+      // Upcoming Scheduled Appointments
+      if (schedules.isNotEmpty()) {
+        item {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            Text(
+              text = "المواعيد المجدولة عبر FCM (${schedules.size})",
+              style = MaterialTheme.typography.titleMedium,
+              fontWeight = FontWeight.Bold,
+              color = MaterialTheme.colorScheme.onBackground
+            )
+          }
+        }
+
+        items(schedules.take(3), key = { it.id }) { schedule ->
+          Card(
+            shape = RoundedCornerShape(14.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            modifier = Modifier.fillMaxWidth()
+          ) {
+            Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                Column {
+                  Text(text = schedule.studentName, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                  Text(
+                    text = "${schedule.groupName} • ${schedule.scheduledDate} (${schedule.scheduledTime})",
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                }
+
+                Box(
+                  modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(QuranEmeraldLight)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                  Text(
+                    text = schedule.status,
+                    color = QuranEmeraldDark,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp
+                  )
+                }
+              }
+
+              Text(
+                text = "المقرر: سورة ${schedule.surahName} (الآيات ${schedule.fromAyah}-${schedule.toAyah}) • ${schedule.recitationType}",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = QuranEmeraldPrimary
+              )
+
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                  Icon(
+                    imageVector = Icons.Default.Campaign,
+                    contentDescription = null,
+                    tint = QuranGoldSecondary,
+                    modifier = Modifier.size(14.dp)
+                  )
+                  Spacer(modifier = Modifier.width(4.dp))
+                  Text(
+                    text = "تم إرسال إشعار تلقائي عبر FCM",
+                    fontSize = 10.sp,
+                    color = Color(0xFF6B4E00),
+                    fontWeight = FontWeight.Bold
+                  )
+                }
+
+                Button(
+                  onClick = {
+                    val st = students.firstOrNull { it.id == schedule.studentId }
+                    studentForRecitation = st
+                    showEvaluationForm = true
+                  },
+                  colors = ButtonDefaults.buttonColors(containerColor = QuranEmeraldPrimary),
+                  shape = RoundedCornerShape(8.dp),
+                  modifier = Modifier.height(32.dp)
+                ) {
+                  Text("بدء التسميع", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                }
+              }
+            }
+          }
+        }
+      }
+
       // Search & Filters Header
       item {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -368,6 +653,21 @@ fun TeacherScreen(
         showAddDialog = false
         scope.launch {
           snackbarHostState.showSnackbar("تمت إضافة الطالب ${newStudent.name} بنجاح")
+        }
+      }
+    )
+  }
+
+  // Schedule Recitation Dialog
+  if (showScheduleDialog) {
+    ScheduleRecitationDialog(
+      students = students,
+      onDismiss = { showScheduleDialog = false },
+      onScheduleCreated = { newSchedule, sendFcm ->
+        viewModel.scheduleRecitation(newSchedule, sendFcm)
+        showScheduleDialog = false
+        scope.launch {
+          snackbarHostState.showSnackbar("تمت جدولة موعد ${newSchedule.studentName} وإرسال إشعار FCM بنجاح!")
         }
       }
     )

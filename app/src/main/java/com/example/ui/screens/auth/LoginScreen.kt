@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.FamilyRestroom
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Person
@@ -76,6 +77,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.R
 import com.example.data.model.Student
+import com.example.ui.components.CodeLoginCard
 import com.example.ui.theme.QuranEmeraldDark
 import com.example.ui.theme.QuranEmeraldLight
 import com.example.ui.theme.QuranEmeraldPrimary
@@ -182,7 +184,7 @@ fun LoginScreen(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
       ) {
         Column(modifier = Modifier.padding(20.dp)) {
-          // Tab Row: المشرف العام / المعلم / الطالب
+          // Tab Row: الكود الأمني / المشرف العام / المعلم / الطالب
           TabRow(
             selectedTabIndex = selectedTab,
             containerColor = QuranEmeraldLight.copy(alpha = 0.5f),
@@ -208,17 +210,17 @@ fun LoginScreen(
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                  imageVector = Icons.Default.AdminPanelSettings,
+                  imageVector = Icons.Default.Key,
                   contentDescription = null,
                   tint = if (selectedTab == 0) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.size(16.dp)
+                  modifier = Modifier.size(15.dp)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(3.dp))
                 Text(
-                  text = "المشرف العام",
+                  text = "كود الأمان",
                   fontWeight = if (selectedTab == 0) FontWeight.Bold else FontWeight.Normal,
                   color = if (selectedTab == 0) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  fontSize = 12.sp
+                  fontSize = 11.sp
                 )
               }
             }
@@ -233,17 +235,17 @@ fun LoginScreen(
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                  imageVector = Icons.Default.School,
+                  imageVector = Icons.Default.AdminPanelSettings,
                   contentDescription = null,
                   tint = if (selectedTab == 1) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.size(16.dp)
+                  modifier = Modifier.size(15.dp)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(3.dp))
                 Text(
-                  text = "المعلم",
+                  text = "المشرف",
                   fontWeight = if (selectedTab == 1) FontWeight.Bold else FontWeight.Normal,
                   color = if (selectedTab == 1) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  fontSize = 12.sp
+                  fontSize = 11.sp
                 )
               }
             }
@@ -258,17 +260,42 @@ fun LoginScreen(
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                  imageVector = Icons.Default.MenuBook,
+                  imageVector = Icons.Default.School,
                   contentDescription = null,
                   tint = if (selectedTab == 2) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.size(16.dp)
+                  modifier = Modifier.size(15.dp)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(3.dp))
                 Text(
-                  text = "الطالب",
+                  text = "المعلم",
                   fontWeight = if (selectedTab == 2) FontWeight.Bold else FontWeight.Normal,
                   color = if (selectedTab == 2) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                  fontSize = 12.sp
+                  fontSize = 11.sp
+                )
+              }
+            }
+
+            Tab(
+              selected = selectedTab == 3,
+              onClick = {
+                selectedTab = 3
+                errorMessage = null
+              },
+              modifier = Modifier.padding(vertical = 10.dp)
+            ) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                  imageVector = Icons.Default.MenuBook,
+                  contentDescription = null,
+                  tint = if (selectedTab == 3) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                  modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                  text = "الطالب",
+                  fontWeight = if (selectedTab == 3) FontWeight.Bold else FontWeight.Normal,
+                  color = if (selectedTab == 3) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                  fontSize = 11.sp
                 )
               }
             }
@@ -295,8 +322,18 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(12.dp))
           }
 
-          // Tab 0: General Supervisor Login
+          // Tab 0: Access Code Login (Instant Verification & Role Scoping)
           AnimatedVisibility(visible = selectedTab == 0) {
+            CodeLoginCard(
+              onCodeLoginSuccess = { accessCode ->
+                viewModel.loginWithAccessCode(accessCode)
+                onLoginSuccess()
+              }
+            )
+          }
+
+          // Tab 1: General Supervisor Login
+          AnimatedVisibility(visible = selectedTab == 1) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
               Box(
                 modifier = Modifier
@@ -373,8 +410,8 @@ fun LoginScreen(
             }
           }
 
-          // Tab 1: Content for Teacher Login
-          AnimatedVisibility(visible = selectedTab == 1) {
+          // Tab 2: Content for Teacher Login
+          AnimatedVisibility(visible = selectedTab == 2) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
               Box(
                 modifier = Modifier
@@ -460,8 +497,8 @@ fun LoginScreen(
             }
           }
 
-          // Tab 2: Content for Student Login
-          AnimatedVisibility(visible = selectedTab == 2) {
+          // Tab 3: Content for Student Login
+          AnimatedVisibility(visible = selectedTab == 3) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
               Box(
                 modifier = Modifier

@@ -1,0 +1,6 @@
+{
+  "name": "حلقات هائل سعيد أنعم",
+  "description": "تطبيق حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم - منصة متكاملة لمتابعة الحلقات والطلاب والتسميع والحضور والغياب",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,160 +1,183 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم</title>
-  <meta name="description" content="منظومة إدارة الحلقات والتحفيظ والصلاحيات - مجمع حلقات هائل سعيد أنعم">
+  <meta name="description" content="نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم">
   <meta name="theme-color" content="#0F5132">
-
-  <!-- إعدادات تطبيق PWA المتقدمة -->
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="apple-touch-icon" href="/icon-192.png">
-
-  <!-- دعم الشاشة الكاملة وتثبيت التطبيق على أجهزة آبل (iOS / iPadOS) -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="حلقات هائل أنعم">
-
-  <!-- تسجيل المشغّل التلقائي PWA -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('PWA Ready:', reg.scope))
-          .catch(err => console.log('PWA Failed:', err));
-      });
-    }
-  </script>
-
+  
   <style>
     :root {
       --primary: #0F5132;
-      --primary-light: #15803D;
-      --primary-dark: #073B22;
-      --accent: #ffc107;
-      --bg: #F8FAFC;
+      --primary-dark: #074333;
+      --gold: #C99700;
+      --bg: #F8F9FA;
       --card-bg: #FFFFFF;
-      --text: #1E293B;
-      --text-muted: #64748B;
-      --border: #E2E8F0;
+      --text: #212529;
+      --text-muted: #6C757D;
     }
-
+    
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", Tahoma, sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding-bottom: 2rem;
     }
 
     header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #FFFFFF;
-      padding: 2rem 1rem;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+      padding: 3rem 1.5rem;
       text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-bottom: 4px solid var(--gold);
     }
 
     .logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-      margin-bottom: 0.75rem;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin-bottom: 1rem;
     }
 
     h1 {
-      font-size: 1.75rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     .subtitle {
-      font-size: 0.95rem;
-      opacity: 0.9;
+      font-size: 1.1rem;
+      color: #E2E8F0;
       max-width: 600px;
-      margin: 0 auto 0.75rem;
+      margin: 0 auto 1.5rem;
     }
 
     .badge {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 4px 14px;
+      background: rgba(201, 151, 0, 0.25);
+      border: 1px solid var(--gold);
+      color: #FFD700;
+      padding: 0.4rem 1rem;
       border-radius: 20px;
-      font-size: 0.8rem;
-      backdrop-filter: blur(4px);
+      font-size: 0.9rem;
+      font-weight: 600;
     }
 
     .container {
-      max-width: 900px;
-      margin: -1rem auto 0;
+      max-width: 1000px;
+      margin: -2rem auto 3rem;
       padding: 0 1rem;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 14px;
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      margin-bottom: 2rem;
     }
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
     }
 
     .feature-item {
-      background: #F8FAFC;
-      border-radius: 10px;
-      padding: 1rem;
-      border: 1px solid #EEF2F6;
+      padding: 1.25rem;
+      background: #F1F5F9;
+      border-radius: 12px;
+      border-right: 4px solid var(--primary);
     }
 
     .feature-item h3 {
-      font-size: 0.95rem;
+      font-size: 1.1rem;
       color: var(--primary);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.5rem;
     }
 
     .feature-item p {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
     }
 
-    .stat-card {
-      background: #1E293B;
-      color: #fff;
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .btn {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(15, 81, 50, 0.3);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
     }
 
     footer {
       text-align: center;
+      padding: 2rem;
       color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid #E2E8F0;
+    }
+
+    pre {
+      background: #1E293B;
+      color: #F8FAFC;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-family: monospace;
       font-size: 0.85rem;
-      margin-top: 2rem;
+      text-align: left;
+      direction: ltr;
     }
   </style>
-</head>
 
+  <script type="application/json" id="manifest-data">
+  {
+    "name": "حلقات هائل سعيد أنعم",
+    "short_name": "حلقات القرآن",
+    "description": "نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0F5132",
+    "theme_color": "#0F5132",
+    "icons": [
+      {
+        "src": "/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  </script>
+</head>
 <body>
+
   <header>
     <img src="/icon-192.png" alt="شعار حلقات هائل سعيد أنعم" class="logo">
     <h1>حلقات هائل سعيد أنعم</h1>
@@ -162,39 +185,13 @@
     <div class="badge">المزامنة الفورية • صلاحيات مقيدة • تنبيهات FCM التلقائية</div>
   </header>
 
-  <!-- زر التثبيت المباشر -->
-  <div id="installContainer" style="display:none; text-align:center; margin:15px 0;">
-    <button id="pwaInstallBtn" style="background:#ffc107; color:#000; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
-      📲 تثبيت تطبيق حلقات هائل سعيد أنعم على الجهاز
-    </button>
-  </div>
-
-  <script>
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installContainer').style.display = 'block';
-    });
-
-    document.getElementById('pwaInstallBtn')?.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          document.getElementById('installContainer').style.display = 'none';
-        }
-        deferredPrompt = null;
-      }
-    });
-  </script>
-
   <div class="container">
     <div class="card">
       <h2 style="color: var(--primary); margin-bottom: 0.75rem;">نبذة عن التطبيق والمنظومة القرآنية</h2>
       <p style="color: #475569; margin-bottom: 1.5rem;">
         تطبيق رسمي متكامل لإدارة حلقات تحفيظ القرآن الكريم بمجمع هائل سعيد أنعم. يوفر نظاماً متطوراً لإدارة الحلقات والطلاب، رصد التسميع اليومي مع التسجيل الصوتي، جدول مواعيد التسميع التلقائي عبر Firebase Cloud Messaging، توثيق القراءات العشر لكافة المذاهب الإسلامية، ومحرك مزامنة عالي السرعة.
       </p>
+
       <div class="features-grid">
         <div class="feature-item">
           <h3>📅 جدولة مواعيد التسميع وتنبيهات FCM</h3>
@@ -220,114 +217,41 @@
           <h3>🎙️ تقييم التسميع والتسجيل الصوتي</h3>
           <p>تسجيل صوتي عالي النقاء للطالب وربطه بنخبة من كبار القراء لتحديد مستوى الطالب التجويدي بدقة.</p>
         </div>
-        <div class="feature-item">
-          <h3>🔑 نظام الدخول بالأكواد الأمنية وعزل البيانات</h3>
-          <p>تسجيل دخول فوري عبر الكود المخصص للمعلم، الطالب، أو ولي الأمر مع عزل بيانات كل حلقة تماماً وحماية الخصوصية.</p>
-        </div>
-        <div class="feature-item">
-          <h3>👧 حلقات وأقسام البنات المتخصصة</h3>
-          <p>أجنحة متكاملة لحلقات البنات (حلقة خديجة، عائشة، فاطمة الزهراء) تحت إشراف نخبة من المحفظات المجازات.</p>
-        </div>
-        <div class="feature-item">
-          <h3>📊 لوحة الرسوم البيانية لتقدم الحفظ</h3>
-          <p>رسوم بيانية تفاعلية لقياس معدل التسميع الأسبوعي، إنجاز الأجزاء الـ 30، ومؤشرات إتقان التجويد لأولياء الأمور والمعلمين.</p>
-        </div>
       </div>
     </div>
 
-    <!-- Charts Visualization Section -->
     <div class="card">
-      <h2 style="color: var(--primary); margin-bottom: 0.75rem;">📊 الرسوم البيانية لمستوى تقدم الطلاب (Recharts Analytics)</h2>
-      <p style="color: #475569; margin-bottom: 1.5rem;">
-        متابعة بصرية فورية لمستوى إنجاز الختمة المباركة وتطور حفظ الطلاب أسبوعياً:
-      </p>
-      <div style="background:#F8FAFC; border-radius:12px; padding:1.5rem; border:1px solid #E2E8F0; margin-bottom:1.5rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-          <strong style="color:var(--primary);">معدل صفحات التسميع الأسبوعي (متوسط الحلقات)</strong>
-          <span style="font-size:0.85rem; color:#64748B;">الأحد - الخميس</span>
-        </div>
-        <!-- SVG Visual Bar Chart styled like Recharts -->
-        <svg viewBox="0 0 500 160" style="width:100%; height:auto; overflow:visible;">
-          <line x1="40" y1="20" x2="480" y2="20" stroke="#E2E8F0" stroke-dasharray="4 4"/>
-          <line x1="40" y1="60" x2="480" y2="60" stroke="#E2E8F0" stroke-dasharray="4 4"/>
-          <line x1="40" y1="100" x2="480" y2="100" stroke="#E2E8F0" stroke-dasharray="4 4"/>
-          <line x1="40" y1="140" x2="480" y2="140" stroke="#CBD5E1"/>
-          
-          <text x="30" y="24" fill="#94A3B8" font-size="11" text-anchor="end">10 ص</text>
-          <text x="30" y="64" fill="#94A3B8" font-size="11" text-anchor="end">7 ص</text>
-          <text x="30" y="104" fill="#94A3B8" font-size="11" text-anchor="end">4 ص</text>
-          <text x="30" y="144" fill="#94A3B8" font-size="11" text-anchor="end">0</text>
-          
-          <!-- Day 1: Sunday (6 pages) -->
-          <rect x="75" y="68" width="45" height="72" rx="6" fill="#0F5132"/>
-          <text x="97" y="60" fill="#0F5132" font-size="12" font-weight="bold" text-anchor="middle">6</text>
-          <text x="97" y="155" fill="#64748B" font-size="12" text-anchor="middle">الأحد</text>
-          
-          <!-- Day 2: Monday (8 pages) -->
-          <rect x="160" y="44" width="45" height="96" rx="6" fill="#0F5132"/>
-          <text x="182" y="36" fill="#0F5132" font-size="12" font-weight="bold" text-anchor="middle">8</text>
-          <text x="182" y="155" fill="#64748B" font-size="12" text-anchor="middle">الإثنين</text>
-          
-          <!-- Day 3: Tuesday (7 pages) -->
-          <rect x="245" y="56" width="45" height="84" rx="6" fill="#C99700"/>
-          <text x="267" y="48" fill="#B45309" font-size="12" font-weight="bold" text-anchor="middle">7</text>
-          <text x="267" y="155" fill="#64748B" font-size="12" text-anchor="middle">الثلاثاء</text>
-          
-          <!-- Day 4: Wednesday (9 pages) -->
-          <rect x="330" y="32" width="45" height="108" rx="6" fill="#0F5132"/>
-          <text x="352" y="24" fill="#0F5132" font-size="12" font-weight="bold" text-anchor="middle">9</text>
-          <text x="352" y="155" fill="#64748B" font-size="12" text-anchor="middle">الأربعاء</text>
-          
-          <!-- Day 5: Thursday (10 pages) -->
-          <rect x="415" y="20" width="45" height="120" rx="6" fill="#15803D"/>
-          <text x="437" y="12" fill="#15803D" font-size="12" font-weight="bold" text-anchor="middle">10</text>
-          <text x="437" y="155" fill="#64748B" font-size="12" text-anchor="middle">الخميس</text>
-        </svg>
-      </div>
-
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem;">
-        <div style="background:#F1F5F9; border-radius:10px; padding:1rem; text-align:center;">
-          <div style="font-size:1.5rem; font-weight:800; color:var(--primary);">94.8%</div>
-          <div style="font-size:0.9rem; color:#64748B;">متوسط إتقان التجويد ومخارج الحروف</div>
-        </div>
-        <div style="background:#F1F5F9; border-radius:10px; padding:1rem; text-align:center;">
-          <div style="font-size:1.5rem; font-weight:800; color:#B45309;">18.4 جزء</div>
-          <div style="font-size:0.9rem; color:#64748B;">متوسط الحفظ المنجز لكل طالب</div>
-        </div>
-        <div style="background:#F1F5F9; border-radius:10px; padding:1rem; text-align:center;">
-          <div style="font-size:1.5rem; font-weight:800; color:#15803D;">96.2%</div>
-          <div style="font-size:0.9rem; color:#64748B;">نسبة الحضور والالتزام بالمواعيد</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PWA Installation & APK Section -->
-    <div class="card">
-      <h2 style="color: var(--primary); margin-bottom: 1rem;">📱 تثبيت تطبيق الويب (PWA) وحزمة أندرويد</h2>
+      <h2 style="color: var(--primary); margin-bottom: 1rem;">إعدادات وتكامل GitHub & PWA</h2>
       <p style="color: #475569; margin-bottom: 1rem;">
-        يمكن تثبيت المنظومة كتطبيق هاتف ذكي مباشر أو تحميل حزمة APK:
+        بيانات ملف التكوين والـ Manifest المعتمدة للمشروع:
       </p>
-      <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
-        <a href="/app-debug.apk" download="Manarat_AlQuran.apk" style="background:#0F5132; color:#fff; text-decoration:none; padding:10px 18px; border-radius:8px; font-size:14px; font-weight:bold; display:inline-flex; align-items:center; gap:6px;">
-          <span>تحميل حزمة أندرويد APK 📥</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="stat-card">
-      <div>
-        <div style="color:#aaa; font-size:12px;">حالة النظام وحزمة APK</div>
-        <div style="color:#ffc107; font-size:18px; font-weight:bold; margin-top:2px;">v1.0.0 متصل وجاهز ⚡</div>
-      </div>
-      <div style="font-size:12px; color:#94A3B8;">
-        PWA Standalone • Firestore Active
-      </div>
+      <pre><code>{
+  "name": "حلقات هائل سعيد أنعم",
+  "short_name": "حلقات القرآن",
+  "description": "نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F5132",
+  "theme_color": "#0F5132",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}</code></pre>
     </div>
   </div>
 
   <footer>
     <p>جميع الحقوق محفوظة © مجمع حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم</p>
   </footer>
-</body>
 
+</body>
 </html>

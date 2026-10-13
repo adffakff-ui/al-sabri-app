@@ -143,6 +143,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     footer {
@@ -162,10 +164,10 @@
     <div class="badge">المزامنة الفورية • صلاحيات مقيدة • تنبيهات FCM التلقائية</div>
   </header>
 
-  <!-- زر التثبيت المباشر -->
+  <!-- زر التثبيت المباشر PWA -->
   <div id="installContainer" style="display:none; text-align:center; margin:15px 0;">
     <button id="pwaInstallBtn" style="background:#ffc107; color:#000; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:14px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">
-      📲 تثبيت تطبيق حلقات هائل سعيد أنعم على الجهاز
+      📲 تثبيت تطبيق الويب (PWA) على الجهاز
     </button>
   </div>
 
@@ -190,6 +192,38 @@
   </script>
 
   <div class="container">
+    
+    <!-- قسم تحميل حزمة APK والتحكم -->
+    <div class="card" id="mainAppContent">
+      <h2 style="color: var(--primary); margin-bottom: 0.75rem;">📱 تحميل تطبيق الأندرويد الرسمي (APK)</h2>
+      <p style="color: #475569; margin-bottom: 1.25rem;">
+        قم بتحميل نسخة التطبيق الرسمية بصيغة APK لتثبيتها مباشرة على هواتف أندرويد، أو استخدم التثبيت السريع كـ PWA عبر المتصفح.
+      </p>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; background: #F8FAFC; padding: 1.25rem; border-radius: 10px; border: 1px solid #E2E8F0; margin-bottom: 1rem;">
+        <div style="flex: 1; min-width: 220px;">
+          <div style="font-weight: bold; color: var(--text); font-size: 1rem; margin-bottom: 0.25rem;">تطبيق حلقات هائل سعيد أنعم - Android</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">الإصدار v1.0.0 • الحجم: ~15 ميجابايت • دعم كامل للمزامنة والإشعارات</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="/app-debug.apk" download="Hael_Anam_Quran.apk" style="background:#0d6efd; color:#fff; text-decoration:none; padding:10px 18px; border-radius:8px; font-size:14px; font-weight:bold; display:flex; align-items:center; gap:6px; box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3);">
+            <span>تحميل ملف APK 📥</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div>
+          <div style="color:#aaa; font-size:12px;">حالة النظام وحزمة APK</div>
+          <div style="color:#ffc107; font-size:16px; font-weight:bold; margin-top:2px;">v1.0.0 متصل وجاهز للتحميل ⚡</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="logoutUser()" style="background:#dc3545; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-family:inherit; font-weight:bold;">تسجيل الخروج 🚪</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- نبذة عن التطبيق والمنظومة القرآنية -->
     <div class="card">
       <h2 style="color: var(--primary); margin-bottom: 0.75rem;">نبذة عن التطبيق والمنظومة القرآنية</h2>
       <p style="color: #475569; margin-bottom: 1.5rem;">
@@ -300,33 +334,23 @@
         </div>
       </div>
     </div>
-    
 
-  <!-- واجهة التطبيق الرئيسية (تظهر حسب الصلاحيات بعد تسجيل الدخول) -->
-  <div id="mainAppContent">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:#1e382d; padding:12px 16px; border-radius:10px; border: 1px solid #28503e;">
-      <div>
-      <div style="display:flex; gap:8px;">
-        <a href="/app-debug.apk" download="Manarat_AlQuran.apk" style="background:#0d6efd; color:#fff; text-decoration:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; display:flex; align-items:center; gap:4px;">
-          <span>تحميل APK 📥</span>
-        </a>
-        <button onclick="logoutUser()" style="background:#dc3545; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-family:inherit; font-weight:bold;">تسجيل الخروج 🚪</button>
-      </div>
-
-    <div class="stat-card">
-      <div>
-        <div style="color:#aaa; font-size:12px;">حالة النظام وحزمة APK</div>
-        <div style="color:#ffc107; font-size:18px; font-weight:bold; margin-top:2px;">v1.0.0 متصل وجاهز ⚡</div>
-      </div>
-      <div style="font-size:12px; color:#94A3B8;">
-        PWA Standalone • Firestore Active
-      </div>
-    </div>
   </div>
 
   <footer>
     <p>جميع الحقوق محفوظة © مجمع حلقات هائل سعيد أنعم لتحفيظ القرآن الكريم</p>
   </footer>
+
+  <script>
+    function logoutUser() {
+      if(confirm('هل تريد تسجيل الخروج حقاً؟')) {
+        localStorage.clear();
+        alert('تم تسجيل الخروج بنجاح');
+        location.reload();
+      }
+    }
+  </script>
 </body>
 
-    </html>
+        </html>
+          

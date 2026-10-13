@@ -1,6 +1,8 @@
 const CACHE_NAME = 'quran-hael-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
-
+self.addEventListener('install', (event) => {
+  console.log('Service Worker Installed');
+  self.skipWaiting();
+});
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
   self.skipWaiting();

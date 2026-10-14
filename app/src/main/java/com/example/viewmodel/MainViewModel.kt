@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 
 enum class UserRole(val title: String, val subtitle: String) {
   SUPERVISOR("المشرف العام", "الإدارة العليا والرقابة الشاملة وإدارة الصلاحيات"),
+  WEB_PORTAL("المنصة المباشرة (WebView)", "تصفح الموقع وسيرفر المنصة المباشر وتحميل الحزمة"),
   GIRLS_ADMIN("إدارة حلقات البنات", "اللوحة الإدارية المستقلة لمشرفات ومعلمات قطاع البنات"),
   TEACHER("المعلم", "إدارة الحلقات والتسميع والغياب"),
   CIRCLES("الحلقات", "دليل حلقات التحفيظ والمعلمين"),
@@ -92,6 +93,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   private val _activeSection = MutableStateFlow(HalaqahSection.ALL)
   val activeSection: StateFlow<HalaqahSection> = _activeSection.asStateFlow()
+
+  // Web Portal & APK Installation Package Management
+  val defaultLiveServerUrl = "https://ais-dev-rx3fcxvtov7s2rmvspaiib-567265308769.europe-west3.run.app"
+  val defaultOfflineAssetUrl = "file:///android_asset/index.html"
+  val defaultApkDownloadUrl = "https://ais-pre-rx3fcxvtov7s2rmvspaiib-567265308769.europe-west3.run.app"
+
+  private val _webServerUrl = MutableStateFlow(defaultLiveServerUrl)
+  val webServerUrl: StateFlow<String> = _webServerUrl.asStateFlow()
+
+  private val _apkDownloadUrl = MutableStateFlow(defaultApkDownloadUrl)
+  val apkDownloadUrl: StateFlow<String> = _apkDownloadUrl.asStateFlow()
+
+  fun updateWebServerUrl(newUrl: String) {
+    if (newUrl.isNotBlank()) {
+      _webServerUrl.value = newUrl.trim()
+    }
+  }
+
+  fun switchToOfflineAsset() {
+    _webServerUrl.value = defaultOfflineAssetUrl
+  }
+
+  fun switchToLiveServer() {
+    _webServerUrl.value = defaultLiveServerUrl
+  }
 
   fun login(role: UserRole, userName: String) {
     _authenticatedRole.value = role
@@ -410,7 +436,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun setRole(role: UserRole): Boolean {
     val auth = _authenticatedRole.value
-    if (auth == UserRole.SUPERVISOR || auth == UserRole.DEVELOPER || auth == role) {
+    if (auth == UserRole.SUPERVISOR || auth == UserRole.DEVELOPER || role == UserRole.WEB_PORTAL || auth == role) {
       _currentRole.value = role
       return true
     }

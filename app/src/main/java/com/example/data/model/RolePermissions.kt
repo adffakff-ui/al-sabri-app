@@ -141,6 +141,21 @@ object PermissionManager {
         canTriggerManualSync = true,
         description = "صلاحيات المطور التقني: إدارة البيانات والنسخ الاحتياطي وإعدادات النظام"
       )
+      UserRole.WEB_PORTAL -> RolePermissions(
+        role = role,
+        canManageStudents = false,
+        canRecordRecitation = false,
+        canTakeAttendance = false,
+        canSendNotifications = false,
+        canViewAllCircles = true,
+        canSwitchRoles = true,
+        canManageSystemRoles = false,
+        canBroadcastAnnouncements = false,
+        canAccessQiraatAcademic = true,
+        canAuditRecitations = false,
+        canTriggerManualSync = true,
+        description = "بوابة المنصة والموقع الإلكتروني المباشر عبر WebView مع إمكانية تحميل حزمة التثبيت"
+      )
     }
   }
 }

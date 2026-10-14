@@ -75,6 +75,7 @@ fun DeveloperScreen(
   val notifications by viewModel.notifications.collectAsStateWithLifecycle()
 
   var messageBanner by remember { mutableStateOf<String?>(null) }
+  var showApkDialog by remember { mutableStateOf(false) }
 
   LazyColumn(
     modifier = modifier.fillMaxSize(),
@@ -163,7 +164,7 @@ fun DeveloperScreen(
 
           Button(
             onClick = {
-              messageBanner = "حزمة التثبيت مُهيأة وجاهزة بالكامل! يمكنك تحميل ملف APK عبر قائمة الإعدادات (Settings > Download APK)."
+              showApkDialog = true
             },
             modifier = Modifier
               .fillMaxWidth()
@@ -366,5 +367,13 @@ fun DeveloperScreen(
         }
       }
     }
+  }
+
+  if (showApkDialog) {
+    val apkUrl by viewModel.apkDownloadUrl.collectAsStateWithLifecycle()
+    com.example.ui.components.ApkDownloadDialog(
+      downloadUrl = apkUrl,
+      onDismiss = { showApkDialog = false }
+    )
   }
 }

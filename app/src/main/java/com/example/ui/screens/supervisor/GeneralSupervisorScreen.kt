@@ -28,15 +28,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.AdminPanelSettings
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Grade
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Headphones
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Pause
@@ -129,6 +132,7 @@ fun GeneralSupervisorScreen(
   var announcementBody by remember { mutableStateOf("") }
   var announcementSentFeedback by remember { mutableStateOf(false) }
   var showGirlsAuthDialog by remember { mutableStateOf(false) }
+  var showApkDialog by remember { mutableStateOf(false) }
 
   if (showAttendanceScreen) {
     AttendanceReportsScreen(
@@ -263,6 +267,139 @@ fun GeneralSupervisorScreen(
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(text = "مزامنة فورية", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+          }
+        }
+      }
+    }
+
+    // Direct Access to APK Installation Package & Embedded Web Portal
+    item {
+      Card(
+        modifier = Modifier
+          .fillMaxWidth()
+          .testTag("apk_web_portal_card"),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = QuranEmeraldDark),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+      ) {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
+          verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.weight(1f)
+            ) {
+              Box(
+                modifier = Modifier
+                  .size(42.dp)
+                  .clip(CircleShape)
+                  .background(QuranGoldSecondary),
+                contentAlignment = Alignment.Center
+              ) {
+                Icon(
+                  imageVector = Icons.Default.Android,
+                  contentDescription = null,
+                  tint = Color(0xFF382900),
+                  modifier = Modifier.size(24.dp)
+                )
+              }
+              Spacer(modifier = Modifier.width(10.dp))
+              Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                  Text(
+                    text = "حزمة التثبيت الأندرويد (APK) وبوابة المنصة",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                  )
+                  Spacer(modifier = Modifier.width(6.dp))
+                  Box(
+                    modifier = Modifier
+                      .clip(RoundedCornerShape(6.dp))
+                      .background(QuranSuccess.copy(alpha = 0.25f))
+                      .padding(horizontal = 6.dp, vertical = 2.dp)
+                  ) {
+                    Text(
+                      text = "جاهزة للتثبيت",
+                      color = QuranGoldSecondary,
+                      fontSize = 9.sp,
+                      fontWeight = FontWeight.Bold
+                    )
+                  }
+                }
+                Text(
+                  text = "تطبيق مدمج يفتح الموقع مباشرة عبر WebView مع ربط Firebase كامل",
+                  style = MaterialTheme.typography.bodySmall,
+                  color = Color.White.copy(alpha = 0.85f),
+                  fontSize = 11.sp
+                )
+              }
+            }
+          }
+
+          // Action buttons: Download APK & Launch WebView
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            Button(
+              onClick = { showApkDialog = true },
+              colors = ButtonDefaults.buttonColors(containerColor = QuranGoldSecondary),
+              shape = RoundedCornerShape(10.dp),
+              modifier = Modifier
+                .weight(1f)
+                .height(42.dp)
+                .testTag("admin_download_apk_btn")
+            ) {
+              Icon(
+                imageVector = Icons.Default.CloudDownload,
+                contentDescription = null,
+                tint = Color(0xFF382900),
+                modifier = Modifier.size(18.dp)
+              )
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = "تحميل حزمة APK مباشرة",
+                color = Color(0xFF382900),
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+              )
+            }
+
+            Button(
+              onClick = {
+                viewModel.setRole(UserRole.WEB_PORTAL)
+                onInspectRole(UserRole.WEB_PORTAL)
+              },
+              colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.18f)),
+              shape = RoundedCornerShape(10.dp),
+              modifier = Modifier
+                .weight(1f)
+                .height(42.dp)
+                .testTag("admin_launch_web_btn")
+            ) {
+              Icon(
+                imageVector = Icons.Default.Language,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(18.dp)
+              )
+              Spacer(modifier = Modifier.width(6.dp))
+              Text(
+                text = "تصفح المنصة (WebView)",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+              )
+            }
           }
         }
       }
@@ -895,6 +1032,15 @@ fun GeneralSupervisorScreen(
         onInspectRole(UserRole.GIRLS_ADMIN)
       },
       promptReason = "التحقق من صلاحيات قسم البنات قبل فتح لوحة المشرفات 🌸"
+    )
+  }
+
+  // Direct APK Installation Package Dialog
+  if (showApkDialog) {
+    val apkUrl by viewModel.apkDownloadUrl.collectAsStateWithLifecycle()
+    com.example.ui.components.ApkDownloadDialog(
+      downloadUrl = apkUrl,
+      onDismiss = { showApkDialog = false }
     )
   }
 }

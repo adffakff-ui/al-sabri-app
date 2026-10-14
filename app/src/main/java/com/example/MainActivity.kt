@@ -57,20 +57,22 @@ class MainActivity : ComponentActivity() {
             } else {
               Scaffold(
                 topBar = {
-                  AppTopBar(
-                    currentRole = currentRole,
-                    authenticatedRole = authenticatedRole,
-                    syncState = syncState,
-                    onSyncClick = { viewModel.performSync() },
-                    onRoleSelected = { role ->
-                      if (role == UserRole.GIRLS_ADMIN && !viewModel.isGirlsSectionAuthorized()) {
-                        showGirlsAuthDialog = true
-                      } else {
-                        viewModel.setRole(role)
-                      }
-                    },
-                    onLogoutClick = { viewModel.logout() }
-                  )
+                  if (currentRole != UserRole.WEB_PORTAL) {
+                    AppTopBar(
+                      currentRole = currentRole,
+                      authenticatedRole = authenticatedRole,
+                      syncState = syncState,
+                      onSyncClick = { viewModel.performSync() },
+                      onRoleSelected = { role ->
+                        if (role == UserRole.GIRLS_ADMIN && !viewModel.isGirlsSectionAuthorized()) {
+                          showGirlsAuthDialog = true
+                        } else {
+                          viewModel.setRole(role)
+                        }
+                      },
+                      onLogoutClick = { viewModel.logout() }
+                    )
+                  }
                 },
                 modifier = Modifier.fillMaxSize()
               ) { innerPadding ->
@@ -85,6 +87,10 @@ class MainActivity : ComponentActivity() {
                     UserRole.SUPERVISOR -> GeneralSupervisorScreen(
                       viewModel = viewModel,
                       onInspectRole = { viewModel.setRole(it) }
+                    )
+                    UserRole.WEB_PORTAL -> com.example.ui.screens.web.WebPortalScreen(
+                      viewModel = viewModel,
+                      onBackToAdmin = { viewModel.setRole(UserRole.SUPERVISOR) }
                     )
                     UserRole.GIRLS_ADMIN -> com.example.ui.screens.girls.GirlsSectionAdminScreen(
                       viewModel = viewModel

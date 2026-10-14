@@ -26,10 +26,12 @@ import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.FamilyRestroom
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.Refresh
@@ -190,6 +192,7 @@ fun AppTopBar(
             Icon(
               imageVector = when (currentRole) {
                 UserRole.SUPERVISOR -> Icons.Default.AdminPanelSettings
+                UserRole.WEB_PORTAL -> Icons.Default.Language
                 UserRole.GIRLS_ADMIN -> Icons.Default.AdminPanelSettings
                 UserRole.TEACHER -> Icons.Default.School
                 UserRole.CIRCLES -> Icons.Default.MenuBook
@@ -210,6 +213,24 @@ fun AppTopBar(
               fontSize = 11.sp
             )
           }
+        }
+
+        // Direct Quick Web Portal button for immediate opening
+        Spacer(modifier = Modifier.width(6.dp))
+        IconButton(
+          onClick = { onRoleSelected(UserRole.WEB_PORTAL) },
+          modifier = Modifier
+            .size(34.dp)
+            .clip(CircleShape)
+            .background(Color.White.copy(alpha = 0.15f))
+            .testTag("topbar_quick_web_portal_btn")
+        ) {
+          Icon(
+            imageVector = Icons.Default.Language,
+            contentDescription = "فتح المنصة الإلكترونية",
+            tint = QuranGoldSecondary,
+            modifier = Modifier.size(18.dp)
+          )
         }
 
         onLogoutClick?.let { onLogout ->
@@ -238,6 +259,7 @@ fun AppTopBar(
       // General Supervisor has Universal Access to inspect all roles & sections
       val roles = listOf(
         UserRole.SUPERVISOR,
+        UserRole.WEB_PORTAL,
         UserRole.GIRLS_ADMIN,
         UserRole.TEACHER,
         UserRole.CIRCLES,
@@ -278,6 +300,7 @@ fun AppTopBar(
               Icon(
                 imageVector = when (role) {
                   UserRole.SUPERVISOR -> Icons.Default.AdminPanelSettings
+                  UserRole.WEB_PORTAL -> Icons.Default.Language
                   UserRole.GIRLS_ADMIN -> Icons.Default.AdminPanelSettings
                   UserRole.TEACHER -> Icons.Default.School
                   UserRole.CIRCLES -> Icons.Default.MenuBook
@@ -294,6 +317,7 @@ fun AppTopBar(
               Text(
                 text = when (role) {
                   UserRole.SUPERVISOR -> "لوحة المشرف ⭐"
+                  UserRole.WEB_PORTAL -> "المنصة والموقع 🌐"
                   UserRole.GIRLS_ADMIN -> "حلقات البنات 🌸"
                   else -> role.title
                 },

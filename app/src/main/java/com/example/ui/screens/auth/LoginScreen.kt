@@ -113,6 +113,7 @@ fun LoginScreen(
   var selectedStudentForLogin by remember { mutableStateOf<Student?>(null) }
   var isStudentDropdownExpanded by remember { mutableStateOf(false) }
   var girlsAccessCode by remember { mutableStateOf("SUP-GIRLS-200") }
+  var showApkDialog by remember { mutableStateOf(false) }
 
   var isLoading by remember { mutableStateOf(false) }
   var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -854,6 +855,42 @@ fun LoginScreen(
           ) {
             Text("🌸 مشرفة قطاع البنات • SUP-GIRLS-200 (وصول محدود)", fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.Bold)
           }
+
+          Spacer(modifier = Modifier.height(8.dp))
+
+          Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+          ) {
+            Button(
+              onClick = {
+                viewModel.login(UserRole.WEB_PORTAL, "زائر المنصة")
+                onLoginSuccess()
+              },
+              modifier = Modifier
+                .weight(1f)
+                .height(38.dp)
+                .testTag("login_launch_web_btn"),
+              colors = ButtonDefaults.buttonColors(containerColor = QuranEmeraldDark),
+              shape = RoundedCornerShape(10.dp)
+            ) {
+              Text("🌐 المنصة (WebView)", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            }
+
+            Button(
+              onClick = {
+                showApkDialog = true
+              },
+              modifier = Modifier
+                .weight(1f)
+                .height(38.dp)
+                .testTag("login_download_apk_btn"),
+              colors = ButtonDefaults.buttonColors(containerColor = QuranGoldSecondary),
+              shape = RoundedCornerShape(10.dp)
+            ) {
+              Text("⬇️ تحميل APK", fontSize = 10.sp, color = Color(0xFF382900), fontWeight = FontWeight.Bold)
+            }
+          }
         }
       }
 
@@ -866,5 +903,13 @@ fun LoginScreen(
         textAlign = TextAlign.Center
       )
     }
+  }
+
+  if (showApkDialog) {
+    val apkUrl by viewModel.apkDownloadUrl.collectAsStateWithLifecycle()
+    com.example.ui.components.ApkDownloadDialog(
+      downloadUrl = apkUrl,
+      onDismiss = { showApkDialog = false }
+    )
   }
 }

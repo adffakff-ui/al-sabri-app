@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -40,6 +43,7 @@ class MainActivity : ComponentActivity() {
           val currentRole by viewModel.currentRole.collectAsStateWithLifecycle()
           val authenticatedRole by viewModel.authenticatedRole.collectAsStateWithLifecycle()
           val syncState by viewModel.syncState.collectAsStateWithLifecycle()
+          var showGirlsAuthDialog by remember { mutableStateOf(false) }
 
           Crossfade(
             targetState = isLoggedIn,
@@ -58,7 +62,13 @@ class MainActivity : ComponentActivity() {
                     authenticatedRole = authenticatedRole,
                     syncState = syncState,
                     onSyncClick = { viewModel.performSync() },
-                    onRoleSelected = { viewModel.setRole(it) },
+                    onRoleSelected = { role ->
+                      if (role == UserRole.GIRLS_ADMIN && !viewModel.isGirlsSectionAuthorized()) {
+                        showGirlsAuthDialog = true
+                      } else {
+                        viewModel.setRole(role)
+                      }
+                    },
                     onLogoutClick = { viewModel.logout() }
                   )
                 },
@@ -76,6 +86,9 @@ class MainActivity : ComponentActivity() {
                       viewModel = viewModel,
                       onInspectRole = { viewModel.setRole(it) }
                     )
+                    UserRole.GIRLS_ADMIN -> com.example.ui.screens.girls.GirlsSectionAdminScreen(
+                      viewModel = viewModel
+                    )
                     UserRole.TEACHER -> TeacherScreen(viewModel = viewModel)
                     UserRole.CIRCLES -> CirclesScreen(viewModel = viewModel)
                     UserRole.QIRAAT -> TenRecitationsScreen(
@@ -89,6 +102,18 @@ class MainActivity : ComponentActivity() {
                     UserRole.DEVELOPER -> DeveloperScreen(viewModel = viewModel)
                   }
                 }
+              }
+
+              if (showGirlsAuthDialog) {
+                com.example.ui.components.GirlsSectionLoginDialog(
+                  viewModel = viewModel,
+                  onDismiss = { showGirlsAuthDialog = false },
+                  onAccessGranted = {
+                    showGirlsAuthDialog = false
+                    viewModel.setRole(UserRole.GIRLS_ADMIN)
+                  },
+                  promptReason = "التحقق من صلاحيات قسم البنات قبل الانتقال إلى لوحة مشرفات البنات 🌸"
+                )
               }
             }
           }

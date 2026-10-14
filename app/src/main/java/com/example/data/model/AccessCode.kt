@@ -46,13 +46,13 @@ object AccessCodeRegistry {
     // 3. مشرفة قطاع البنات
     AccessCode(
       code = "SUP-GIRLS-200",
-      role = UserRole.SUPERVISOR,
+      role = UserRole.GIRLS_ADMIN,
       userName = "الشيخة أم عبد الله الأنصاري (مشرفة قطاع البنات)",
       groupName = null,
       studentId = null,
       section = HalaqahSection.GIRLS,
-      scopeDescription = "مشرفة قطاع البنات: صلاحيات رقابية على حلقات وقاعات البنات فقط. تم غلق وحجب بيانات قطاع البنين تماماً.",
-      allowedPrivileges = listOf("متابعة حلقات البنات الخمسة", "مراجعة حضور وتسميع طالبات البنات", "إرسال توجيهات لمعلمات البنات"),
+      scopeDescription = "مشرفة قطاع البنات: صلاحيات رقابية وإدارية على حلقات وقاعات البنات فقط. تم غلق وحجب بيانات قطاع البنين تماماً.",
+      allowedPrivileges = listOf("متابعة وإدارة حلقات البنات", "تعيين وتوثيق المحفظات بالسند", "تسجيل وإدارة بيانات الطالبات", "رصد الحفظ والغياب اليومي"),
       restrictedPrivileges = listOf("حلقات وأقسام البنين مغلقة تماماً", "تعديل إعدادات المشرف العام")
     ),
 
@@ -149,6 +149,7 @@ object AccessCodeRegistry {
   ): AccessCode {
     val prefix = when (role) {
       UserRole.SUPERVISOR -> if (section == HalaqahSection.GIRLS) "SUP-GIRLS" else "SUP-BOYS"
+      UserRole.GIRLS_ADMIN -> "SUP-GIRLS"
       UserRole.TEACHER -> if (section == HalaqahSection.GIRLS) "TCH-G" else "TCH-B"
       UserRole.STUDENT -> if (section == HalaqahSection.GIRLS) "STU-G" else "STU-B"
       UserRole.PARENT -> if (section == HalaqahSection.GIRLS) "PAR-G" else "PAR-B"
@@ -158,6 +159,7 @@ object AccessCodeRegistry {
     val codeStr = "$prefix-$randomSuffix"
 
     val scopeDesc = when (role) {
+      UserRole.GIRLS_ADMIN -> "مشرفة قطاع البنات: إدارة حلقات ومحفظات وطالبات قطاع البنات فقط."
       UserRole.TEACHER -> "معلم/معلمة: صلاحيات محصورة في إدارة طلاب $groupName فقط، مع حجب سائر الحلقات الأخرى."
       UserRole.STUDENT -> "طالب/طالبة: صلاحيات مقتصرة على ملف $name الشخصي فقط."
       UserRole.PARENT -> "ولي أمر: صلاحيات مقتصرة على متابعة $name فقط."

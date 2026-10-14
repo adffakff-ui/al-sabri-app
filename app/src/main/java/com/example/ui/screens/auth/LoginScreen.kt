@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -46,6 +47,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -110,6 +112,7 @@ fun LoginScreen(
   var studentPhone by remember { mutableStateOf("") }
   var selectedStudentForLogin by remember { mutableStateOf<Student?>(null) }
   var isStudentDropdownExpanded by remember { mutableStateOf(false) }
+  var girlsAccessCode by remember { mutableStateOf("SUP-GIRLS-200") }
 
   var isLoading by remember { mutableStateOf(false) }
   var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -184,14 +187,15 @@ fun LoginScreen(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
       ) {
         Column(modifier = Modifier.padding(20.dp)) {
-          // Tab Row: الكود الأمني / المشرف العام / المعلم / الطالب
-          TabRow(
+          // Tab Row: الكود الأمني / المشرف العام / المعلم / الطالب / مشرفة البنات
+          ScrollableTabRow(
             selectedTabIndex = selectedTab,
+            edgePadding = 2.dp,
             containerColor = QuranEmeraldLight.copy(alpha = 0.5f),
             indicator = { tabPositions ->
               TabRowDefaults.SecondaryIndicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                color = QuranEmeraldPrimary,
+                color = if (selectedTab == 4) Color(0xFFBE185D) else QuranEmeraldPrimary,
                 height = 3.dp
               )
             },
@@ -206,7 +210,7 @@ fun LoginScreen(
                 selectedTab = 0
                 errorMessage = null
               },
-              modifier = Modifier.padding(vertical = 10.dp)
+              modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -231,7 +235,7 @@ fun LoginScreen(
                 selectedTab = 1
                 errorMessage = null
               },
-              modifier = Modifier.padding(vertical = 10.dp)
+              modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -256,7 +260,7 @@ fun LoginScreen(
                 selectedTab = 2
                 errorMessage = null
               },
-              modifier = Modifier.padding(vertical = 10.dp)
+              modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -281,7 +285,7 @@ fun LoginScreen(
                 selectedTab = 3
                 errorMessage = null
               },
-              modifier = Modifier.padding(vertical = 10.dp)
+              modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
             ) {
               Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -295,6 +299,31 @@ fun LoginScreen(
                   text = "الطالب",
                   fontWeight = if (selectedTab == 3) FontWeight.Bold else FontWeight.Normal,
                   color = if (selectedTab == 3) QuranEmeraldPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                  fontSize = 11.sp
+                )
+              }
+            }
+
+            Tab(
+              selected = selectedTab == 4,
+              onClick = {
+                selectedTab = 4
+                errorMessage = null
+              },
+              modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp)
+            ) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                  imageVector = Icons.Default.Security,
+                  contentDescription = null,
+                  tint = if (selectedTab == 4) Color(0xFFBE185D) else MaterialTheme.colorScheme.onSurfaceVariant,
+                  modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                  text = "مشرفة البنات 🌸",
+                  fontWeight = if (selectedTab == 4) FontWeight.Bold else FontWeight.Normal,
+                  color = if (selectedTab == 4) Color(0xFFBE185D) else MaterialTheme.colorScheme.onSurfaceVariant,
                   fontSize = 11.sp
                 )
               }
@@ -602,6 +631,114 @@ fun LoginScreen(
             }
           }
 
+          // Tab 4: Content for Girls Section Supervisor Login (Limited Access & Section Verification)
+          AnimatedVisibility(visible = selectedTab == 4) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+              Box(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .clip(RoundedCornerShape(10.dp))
+                  .background(Color(0xFFFDF2F8))
+                  .padding(10.dp)
+              ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                  Icon(
+                    imageVector = Icons.Default.Security,
+                    contentDescription = null,
+                    tint = Color(0xFFBE185D),
+                    modifier = Modifier.size(18.dp)
+                  )
+                  Spacer(modifier = Modifier.width(8.dp))
+                  Text(
+                    text = "نظام الوصول المحدود: هذه البوابة مخصصة لمشرفات قطاع البنات. يتم عزل كافة البيانات والتحقق الصارم من كود المصادقة الخاص بالقسم.",
+                    fontSize = 11.sp,
+                    color = Color(0xFF831843),
+                    lineHeight = 16.sp
+                  )
+                }
+              }
+
+              OutlinedTextField(
+                value = girlsAccessCode,
+                onValueChange = {
+                  girlsAccessCode = it.uppercase()
+                  errorMessage = null
+                },
+                label = { Text("كود مصادقة مشرفة البنات") },
+                leadingIcon = {
+                  Icon(
+                    imageVector = Icons.Default.Key,
+                    contentDescription = null,
+                    tint = Color(0xFFBE185D)
+                  )
+                },
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .testTag("girls_supervisor_code_input"),
+                singleLine = true,
+                shape = RoundedCornerShape(14.dp)
+              )
+
+              // Quick preset chips
+              Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+              ) {
+                Box(
+                  modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFFCE7F3))
+                    .clickable { girlsAccessCode = "SUP-GIRLS-200"; errorMessage = null }
+                    .padding(vertical = 6.dp),
+                  contentAlignment = Alignment.Center
+                ) {
+                  Text("SUP-GIRLS-200 🌸", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFF831843))
+                }
+                Box(
+                  modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFFCE7F3))
+                    .clickable { girlsAccessCode = "TCH-KHADIJA-33"; errorMessage = null }
+                    .padding(vertical = 6.dp),
+                  contentAlignment = Alignment.Center
+                ) {
+                  Text("TCH-KHADIJA-33 🧕", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFF831843))
+                }
+              }
+
+              Button(
+                onClick = {
+                  isLoading = true
+                  scope.launch {
+                    delay(300)
+                    val (success, message) = viewModel.verifyAndAuthorizeGirlsAccess(girlsAccessCode)
+                    isLoading = false
+                    if (success) {
+                      onLoginSuccess()
+                    } else {
+                      errorMessage = message
+                    }
+                  }
+                },
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .height(48.dp)
+                  .testTag("girls_supervisor_login_submit_btn"),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBE185D)),
+                shape = RoundedCornerShape(14.dp),
+                enabled = !isLoading
+              ) {
+                if (isLoading) {
+                  CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
+                } else {
+                  Text(text = "التحقق ودخول لوحة المشرفات 🌸", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                }
+              }
+            }
+          }
+
           Spacer(modifier = Modifier.height(16.dp))
 
           // Quick Demo Access Section
@@ -700,6 +837,22 @@ fun LoginScreen(
             ) {
               Text("قسم الحلقات 🔒", fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
+          }
+
+          Spacer(modifier = Modifier.height(6.dp))
+
+          Button(
+            onClick = {
+              viewModel.verifyAndAuthorizeGirlsAccess("SUP-GIRLS-200")
+              onLoginSuccess()
+            },
+            modifier = Modifier
+              .fillMaxWidth()
+              .testTag("demo_girls_admin_btn"),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBE185D)),
+            shape = RoundedCornerShape(10.dp)
+          ) {
+            Text("🌸 مشرفة قطاع البنات • SUP-GIRLS-200 (وصول محدود)", fontSize = 11.sp, color = Color.White, fontWeight = FontWeight.Bold)
           }
         }
       }

@@ -1,0 +1,110 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for security and identity verification
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(docId) {
+      return docId is string && docId.size() > 0 && docId.size() <= 64;
+    }
+
+    // Check if the current user is an approved, active Girls Supervisor
+    function isGirlsSupervisor() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/girls_supervisors/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/girls_supervisors/$(request.auth.uid)).data.isActive == true &&
+        get(/databases/$(database)/documents/girls_supervisors/$(request.auth.uid)).data.assignedSection == 'GIRLS'
+      );
+    }
+
+    // Check if the current user is a teacher assigned specifically to this Girls Halaqah
+    function isGirlsTeacher(halaqahId) {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/girls_teachers/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/girls_teachers/$(request.auth.uid)).data.isActive == true &&
+        get(/databases/$(database)/documents/girls_teachers/$(request.auth.uid)).data.assignedSection == 'GIRLS' &&
+        get(/databases/$(database)/documents/girls_teachers/$(request.auth.uid)).data.assignedHalaqahId == halaqahId
+      );
+    }
+
+    // Check if the caller belongs to the Girls section (either supervisor or teacher)
+    function isGirlsMember() {
+      return isGirlsSupervisor() || (
+        isSignedIn() && exists(/databases/$(database)/documents/girls_teachers/$(request.auth.uid))
+      );
+    }
+
+    // ==========================================
+    // GIRLS SECTION: SUPERVISOR & TEACHER REGISTRIES
+    // ==========================================
+
+    match /girls_supervisors/{supervisorId} {
+      allow get: if isSignedIn() && isValidId(supervisorId);
+      allow list: if isGirlsSupervisor();
+      allow create, update: if isSignedIn() && request.auth.uid == supervisorId;
+      allow delete: if false; // Supervisors cannot be deleted arbitrarily
+    }
+
+    match /girls_teachers/{teacherId} {
+      allow get: if isSignedIn() && isValidId(teacherId);
+      allow list: if isGirlsSupervisor();
+      allow create, update: if isGirlsSupervisor() || (isSignedIn() && request.auth.uid == teacherId);
+      allow delete: if isGirlsSupervisor();
+    }
+
+    // ==========================================
+    // GIRLS HALAQAT & SUBCOLLECTIONS (DATA ISOLATION)
+    // ==========================================
+
+    match /girls_halaqat/{halaqahId} {
+      // Supervisors can read all girls halaqat; Teachers can only read their assigned halaqah
+      allow get: if isGirlsSupervisor() || isGirlsTeacher(halaqahId);
+      allow list: if isGirlsSupervisor();
+
+      // Only Girls Supervisors can add, modify, or archive girls halaqat
+      allow create, update, delete: if isGirlsSupervisor() && isValidId(halaqahId);
+
+      // Subcollection: Students enrolled in this halaqah
+      match /students/{studentId} {
+        allow get, list: if isGirlsSupervisor() || isGirlsTeacher(halaqahId);
+        allow create, update: if (isGirlsSupervisor() || isGirlsTeacher(halaqahId)) && isValidId(studentId);
+        allow delete: if isGirlsSupervisor();
+      }
+
+      // Subcollection: Daily Recitation evaluations
+      match /recitations/{recitationId} {
+        allow get, list: if isGirlsSupervisor() || isGirlsTeacher(halaqahId);
+        allow create, update: if (isGirlsSupervisor() || isGirlsTeacher(halaqahId)) && isValidId(recitationId);
+        allow delete: if isGirlsSupervisor();
+      }
+
+      // Subcollection: Daily Attendance records
+      match /attendance/{attendanceId} {
+        allow get, list: if isGirlsSupervisor() || isGirlsTeacher(halaqahId);
+        allow create, update: if (isGirlsSupervisor() || isGirlsTeacher(halaqahId)) && isValidId(attendanceId);
+        allow delete: if isGirlsSupervisor();
+      }
+    }
+
+    // ==========================================
+    // BOYS HALAQAT (STRICT ISOLATION & BLOCKING)
+    // ==========================================
+
+    match /boys_halaqat/{halaqahId} {
+      // Strictly DENY access to any caller authenticated as a Girls Supervisor or Girls Teacher
+      allow read, write: if isSignedIn() && !isGirlsMember() && !isGirlsSupervisor();
+
+      match /{subCollection=**} {
+        allow read, write: if isSignedIn() && !isGirlsMember() && !isGirlsSupervisor();
+      }
+    }
+
+    // Fallback: deny all unspecified documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

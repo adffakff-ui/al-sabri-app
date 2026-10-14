@@ -1,0 +1,148 @@
+{
+  "entities": {
+    "GirlsSupervisor": {
+      "title": "GirlsSupervisor",
+      "description": "Approved supervisor identity record for the girls section",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID of the supervisor" },
+        "code": { "type": "string", "description": "Authorized supervisor access code (e.g. SUP-GIRLS-200)" },
+        "name": { "type": "string", "description": "Full name of the supervisor" },
+        "phone": { "type": "string", "description": "Phone number" },
+        "role": { "type": "string", "enum": ["GIRLS_ADMIN", "GIRLS_SUPERVISOR"], "description": "Supervisor role" },
+        "assignedSection": { "type": "string", "enum": ["GIRLS"], "description": "Fixed section isolation tag" },
+        "isActive": { "type": "boolean", "description": "Active status of the supervisor" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["code", "name", "role", "assignedSection", "isActive"]
+    },
+    "GirlsTeacher": {
+      "title": "GirlsTeacher",
+      "description": "Approved teacher record for girls halaqat with assigned circle scope",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID of the teacher" },
+        "code": { "type": "string", "description": "Teacher access code (e.g. TCH-KHADIJA-33)" },
+        "name": { "type": "string", "description": "Full name of the teacher" },
+        "phone": { "type": "string", "description": "Phone number" },
+        "assignedHalaqahId": { "type": "string", "description": "ID of the specific halaqah assigned to this teacher" },
+        "assignedHalaqahName": { "type": "string", "description": "Name of the assigned halaqah" },
+        "sanadIjazah": { "type": "string", "description": "Quranic Sanad / Ijazah details" },
+        "assignedSection": { "type": "string", "enum": ["GIRLS"], "description": "Fixed section isolation tag" },
+        "isActive": { "type": "boolean", "description": "Active status" }
+      },
+      "required": ["code", "name", "assignedHalaqahId", "assignedSection", "isActive"]
+    },
+    "GirlsHalaqah": {
+      "title": "GirlsHalaqah",
+      "description": "A Quran study circle document in the girls section",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Halaqah document ID" },
+        "name": { "type": "string", "description": "Name of the girls halaqah (e.g. حلقة خديجة بنت خويلد)" },
+        "section": { "type": "string", "enum": ["GIRLS"], "description": "Strict section identifier" },
+        "teacherId": { "type": "string", "description": "Assigned teacher code or UID" },
+        "teacherName": { "type": "string", "description": "Assigned teacher name" },
+        "targetLevel": { "type": "string", "description": "Curriculum / target level" },
+        "location": { "type": "string", "description": "Hall or virtual room" },
+        "timeSlot": { "type": "string", "description": "Schedule time slot" },
+        "capacity": { "type": "integer", "description": "Maximum student capacity" },
+        "studentCount": { "type": "integer", "description": "Current number of enrolled students" },
+        "accessCode": { "type": "string", "description": "Teacher access code" },
+        "colorHex": { "type": "integer", "description": "Theme color integer" },
+        "isActive": { "type": "boolean", "description": "Circle active flag" },
+        "createdAt": { "type": "integer", "description": "Creation timestamp in millis" },
+        "updatedAt": { "type": "integer", "description": "Update timestamp in millis" }
+      },
+      "required": ["name", "section", "teacherName", "isActive"]
+    },
+    "GirlsStudent": {
+      "title": "GirlsStudent",
+      "description": "Student enrolled in a specific girls halaqah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Student document ID" },
+        "halaqahId": { "type": "string", "description": "Parent halaqah ID" },
+        "name": { "type": "string", "description": "Student name" },
+        "phone": { "type": "string", "description": "Contact phone" },
+        "parentName": { "type": "string", "description": "Parent or guardian name" },
+        "parentPhone": { "type": "string", "description": "Parent phone number" },
+        "level": { "type": "string", "description": "Memorization level" },
+        "currentSurah": { "type": "string", "description": "Current active Surah" },
+        "currentAyah": { "type": "integer", "description": "Current Ayah" },
+        "memorizedJuzCount": { "type": "integer", "description": "Number of completed Ajzaa" },
+        "studentAccessCode": { "type": "string", "description": "Student individual access code" },
+        "parentAccessCode": { "type": "string", "description": "Parent individual access code" },
+        "notes": { "type": "string", "description": "Educational or behavioral notes" },
+        "createdAt": { "type": "integer", "description": "Enrollment timestamp" },
+        "updatedAt": { "type": "integer", "description": "Last updated timestamp" }
+      },
+      "required": ["halaqahId", "name", "level", "parentPhone"]
+    },
+    "GirlsRecitation": {
+      "title": "GirlsRecitation",
+      "description": "Daily recitation evaluation record in a girls halaqah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Recitation record ID" },
+        "halaqahId": { "type": "string", "description": "Halaqah ID" },
+        "studentId": { "type": "string", "description": "Student ID" },
+        "studentName": { "type": "string", "description": "Student name" },
+        "surahName": { "type": "string", "description": "Recited Surah" },
+        "fromAyah": { "type": "integer", "description": "Starting Ayah" },
+        "toAyah": { "type": "integer", "description": "Ending Ayah" },
+        "recitationType": { "type": "string", "description": "Type: حفظ جديد, مراجعة صغرى, مراجعة كبرى" },
+        "evaluation": { "type": "string", "description": "Grade: ممتاز, جيد جدا, جيد, يحتاج إعادة" },
+        "mistakesCount": { "type": "integer", "description": "Number of errors" },
+        "tajweedScore": { "type": "integer", "description": "Tajweed score out of 10" },
+        "teacherNotes": { "type": "string", "description": "Notes from the teacher" },
+        "teacherName": { "type": "string", "description": "Teacher who evaluated" },
+        "date": { "type": "string", "description": "Date string YYYY-MM-DD" },
+        "timestamp": { "type": "integer", "description": "Unix timestamp millis" }
+      },
+      "required": ["halaqahId", "studentId", "surahName", "evaluation", "date"]
+    },
+    "GirlsAttendance": {
+      "title": "GirlsAttendance",
+      "description": "Daily attendance record for a student in a girls halaqah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Attendance record ID" },
+        "halaqahId": { "type": "string", "description": "Halaqah ID" },
+        "studentId": { "type": "string", "description": "Student ID" },
+        "studentName": { "type": "string", "description": "Student name" },
+        "date": { "type": "string", "description": "Date string YYYY-MM-DD" },
+        "status": { "type": "string", "enum": ["حاضر", "غائب", "متأخر", "مستأذن"], "description": "Attendance status" },
+        "notes": { "type": "string", "description": "Excuses or notes" },
+        "recordedAt": { "type": "integer", "description": "Recorded timestamp millis" }
+      },
+      "required": ["halaqahId", "studentId", "date", "status"]
+    }
+  },
+  "firestore": {
+    "/girls_supervisors/{supervisorId}": {
+      "schema": { "$ref": "#/entities/GirlsSupervisor" },
+      "description": "Approved supervisors records for the girls section with verified credentials"
+    },
+    "/girls_teachers/{teacherId}": {
+      "schema": { "$ref": "#/entities/GirlsTeacher" },
+      "description": "Approved teachers records with their assigned halaqah ID"
+    },
+    "/girls_halaqat/{halaqahId}": {
+      "schema": { "$ref": "#/entities/GirlsHalaqah" },
+      "description": "Quran study circles in the girls section"
+    },
+    "/girls_halaqat/{halaqahId}/students/{studentId}": {
+      "schema": { "$ref": "#/entities/GirlsStudent" },
+      "description": "Students enrolled in this specific girls halaqah"
+    },
+    "/girls_halaqat/{halaqahId}/recitations/{recitationId}": {
+      "schema": { "$ref": "#/entities/GirlsRecitation" },
+      "description": "Recitation logs and evaluations for students in this girls halaqah"
+    },
+    "/girls_halaqat/{halaqahId}/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/GirlsAttendance" },
+      "description": "Daily attendance records for students in this girls halaqah"
+    }
+  }
+}

@@ -20,7 +20,9 @@ data class QuranHalaqah(
   val days: String,
   val currentCurriculum: String,
   val colorHex: Long = 0xFF0D6850,
-  val section: HalaqahSection = HalaqahSection.BOYS
+  val section: HalaqahSection = HalaqahSection.BOYS,
+  val teacherSanad: String = teacherTitle,
+  val recitationDays: String = days
 ) {
   val mosqueLocation: String get() = location
   val meetingTime: String get() = timeSlot

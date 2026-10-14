@@ -190,6 +190,7 @@ fun AppTopBar(
             Icon(
               imageVector = when (currentRole) {
                 UserRole.SUPERVISOR -> Icons.Default.AdminPanelSettings
+                UserRole.GIRLS_ADMIN -> Icons.Default.AdminPanelSettings
                 UserRole.TEACHER -> Icons.Default.School
                 UserRole.CIRCLES -> Icons.Default.MenuBook
                 UserRole.QIRAAT -> Icons.Default.AutoStories
@@ -237,6 +238,7 @@ fun AppTopBar(
       // General Supervisor has Universal Access to inspect all roles & sections
       val roles = listOf(
         UserRole.SUPERVISOR,
+        UserRole.GIRLS_ADMIN,
         UserRole.TEACHER,
         UserRole.CIRCLES,
         UserRole.QIRAAT,
@@ -276,6 +278,7 @@ fun AppTopBar(
               Icon(
                 imageVector = when (role) {
                   UserRole.SUPERVISOR -> Icons.Default.AdminPanelSettings
+                  UserRole.GIRLS_ADMIN -> Icons.Default.AdminPanelSettings
                   UserRole.TEACHER -> Icons.Default.School
                   UserRole.CIRCLES -> Icons.Default.MenuBook
                   UserRole.QIRAAT -> Icons.Default.AutoStories
@@ -289,7 +292,11 @@ fun AppTopBar(
               )
               Spacer(modifier = Modifier.width(5.dp))
               Text(
-                text = if (role == UserRole.SUPERVISOR) "لوحة المشرف ⭐" else role.title,
+                text = when (role) {
+                  UserRole.SUPERVISOR -> "لوحة المشرف ⭐"
+                  UserRole.GIRLS_ADMIN -> "حلقات البنات 🌸"
+                  else -> role.title
+                },
                 color = if (isSelected) Color(0xFF382900) else Color.White,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 fontSize = 12.sp

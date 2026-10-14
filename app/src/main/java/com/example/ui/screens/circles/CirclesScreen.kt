@@ -65,6 +65,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.data.model.HalaqahSection
 import com.example.data.model.MockHalaqatData
 import com.example.data.model.QuranHalaqah
+import com.example.ui.components.GirlsSectionLoginDialog
 import com.example.ui.components.HeroQuranBanner
 import com.example.ui.components.StatCard
 import com.example.ui.theme.QuranEmeraldDark
@@ -88,6 +89,9 @@ fun CirclesScreen(
   var selectedTimeFilter by remember { mutableStateOf("الكل") }
   var selectedSectionFilter by remember { mutableStateOf("الكل") }
   var selectedHalaqahForDetails by remember { mutableStateOf<QuranHalaqah?>(null) }
+  var showGirlsAuthDialog by remember { mutableStateOf(false) }
+  var pendingAction by remember { mutableStateOf<(() -> Unit)?>(null) }
+  var pendingReason by remember { mutableStateOf("طلب الوصول لبيانات قسم البنات المحمية") }
 
   val timeFilters = listOf("الكل", "بعد العصر", "بعد المغرب", "بعد الفجر", "بعد العشاء")
   val sectionFilters = listOf("الكل", "قسم البنين 👦", "قسم البنات 👧")
@@ -192,7 +196,15 @@ fun CirclesScreen(
             val isGirls = sec.contains("بنات")
             FilterChip(
               selected = isSelected,
-              onClick = { selectedSectionFilter = sec },
+              onClick = {
+                if (isGirls && !viewModel.isGirlsSectionAuthorized()) {
+                  pendingReason = "طلب استعراض قائمة حلقات وتفاصيل قسم البنات 🌸"
+                  pendingAction = { selectedSectionFilter = sec }
+                  showGirlsAuthDialog = true
+                } else {
+                  selectedSectionFilter = sec
+                }
+              },
               label = { Text(sec, fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
               colors = FilterChipDefaults.filterChipColors(
                 selectedContainerColor = if (isGirls) Color(0xFFBE185D) else QuranEmeraldPrimary,
@@ -280,11 +292,30 @@ fun CirclesScreen(
             ShareHelper.shareViaWhatsApp(context, halaqah.teacherPhone, message)
           },
           onViewStudents = {
-            viewModel.setSelectedGroup(halaqah.name)
-            viewModel.setRole(UserRole.TEACHER)
+            if (halaqah.section == HalaqahSection.GIRLS && !viewModel.isGirlsSectionAuthorized()) {
+              pendingReason = "طلب استعراض طالبات ${halaqah.name} بقسم البنات"
+              pendingAction = {
+                viewModel.setSelectedGroup(halaqah.name)
+                viewModel.setRole(UserRole.GIRLS_ADMIN)
+              }
+              showGirlsAuthDialog = true
+            } else {
+              viewModel.setSelectedGroup(halaqah.name)
+              if (halaqah.section == HalaqahSection.GIRLS) {
+                viewModel.setRole(UserRole.GIRLS_ADMIN)
+              } else {
+                viewModel.setRole(UserRole.TEACHER)
+              }
+            }
           },
           onCardClick = {
-            selectedHalaqahForDetails = halaqah
+            if (halaqah.section == HalaqahSection.GIRLS && !viewModel.isGirlsSectionAuthorized()) {
+              pendingReason = "طلب استعراض بيانات وتفاصيل حلقة ${halaqah.name} بقسم البنات"
+              pendingAction = { selectedHalaqahForDetails = halaqah }
+              showGirlsAuthDialog = true
+            } else {
+              selectedHalaqahForDetails = halaqah
+            }
           }
         )
       }
@@ -301,6 +332,23 @@ fun CirclesScreen(
         ShareHelper.shareViaWhatsApp(context, halaqah.teacherPhone, message)
         selectedHalaqahForDetails = null
       }
+    )
+  }
+
+  // Limited Access Login Dialog for Girls Section
+  if (showGirlsAuthDialog) {
+    GirlsSectionLoginDialog(
+      viewModel = viewModel,
+      onDismiss = {
+        showGirlsAuthDialog = false
+        pendingAction = null
+      },
+      onAccessGranted = {
+        showGirlsAuthDialog = false
+        pendingAction?.invoke()
+        pendingAction = null
+      },
+      promptReason = pendingReason
     )
   }
 }

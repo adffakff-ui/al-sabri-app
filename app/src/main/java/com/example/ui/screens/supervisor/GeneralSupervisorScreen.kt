@@ -128,6 +128,7 @@ fun GeneralSupervisorScreen(
   var announcementTitle by remember { mutableStateOf("") }
   var announcementBody by remember { mutableStateOf("") }
   var announcementSentFeedback by remember { mutableStateOf(false) }
+  var showGirlsAuthDialog by remember { mutableStateOf(false) }
 
   if (showAttendanceScreen) {
     AttendanceReportsScreen(
@@ -356,6 +357,83 @@ fun GeneralSupervisorScreen(
             shape = RoundedCornerShape(8.dp)
           ) {
             Text("فتح التقرير 📋", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+          }
+        }
+      }
+    }
+
+    // Direct Access to Girls Section Admin Dashboard
+    item {
+      Card(
+        modifier = Modifier
+          .fillMaxWidth()
+          .clickable { onInspectRole(UserRole.GIRLS_ADMIN) }
+          .testTag("supervisor_girls_admin_card"),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFDF2F8)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+      ) {
+        Row(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(14.dp),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+          Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+          ) {
+            Box(
+              modifier = Modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFBE185D)),
+              contentAlignment = Alignment.Center
+            ) {
+              Text(text = "🧕", fontSize = 22.sp)
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                  text = "لوحة إدارة قسم حلقات البنات",
+                  style = MaterialTheme.typography.titleSmall,
+                  fontWeight = FontWeight.Bold,
+                  color = Color(0xFF831843)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Box(
+                  modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFFCE7F3))
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                  Text("عزل بيانات تام 🔒", color = Color(0xFFBE185D), fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                }
+              }
+              Spacer(modifier = Modifier.height(2.dp))
+              Text(
+                text = "إشراف الشيخة أم عبد الله • إضافة الحلقات، تعيين المحفظات بالسند، وشؤون الطالبات",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF9D174D),
+                fontSize = 11.sp
+              )
+            }
+          }
+
+          Button(
+            onClick = {
+              if (!viewModel.isGirlsSectionAuthorized()) {
+                showGirlsAuthDialog = true
+              } else {
+                onInspectRole(UserRole.GIRLS_ADMIN)
+              }
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBE185D)),
+            shape = RoundedCornerShape(8.dp)
+          ) {
+            Text("فتح اللوحة 🌸", fontSize = 11.sp, fontWeight = FontWeight.Bold)
           }
         }
       }
@@ -805,6 +883,19 @@ fun GeneralSupervisorScreen(
         }
       }
     }
+  }
+
+  // Limited Access Login Dialog for Girls Section
+  if (showGirlsAuthDialog) {
+    com.example.ui.components.GirlsSectionLoginDialog(
+      viewModel = viewModel,
+      onDismiss = { showGirlsAuthDialog = false },
+      onAccessGranted = {
+        showGirlsAuthDialog = false
+        onInspectRole(UserRole.GIRLS_ADMIN)
+      },
+      promptReason = "التحقق من صلاحيات قسم البنات قبل فتح لوحة المشرفات 🌸"
+    )
   }
 }
 

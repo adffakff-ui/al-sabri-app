@@ -36,6 +36,21 @@ object PermissionManager {
         canTriggerManualSync = true,
         description = "كامل الصلاحيات الإشرافية والتنفيذية والرقابة العامة على الحلقات والمعلمين والطلاب"
       )
+      UserRole.GIRLS_ADMIN -> RolePermissions(
+        role = role,
+        canManageStudents = true,
+        canRecordRecitation = true,
+        canTakeAttendance = true,
+        canSendNotifications = true,
+        canViewAllCircles = true,
+        canSwitchRoles = false, // مقيد لقطاع البنات فقط ومغلق باقي أقسام التطبيق
+        canManageSystemRoles = false,
+        canBroadcastAnnouncements = true,
+        canAccessQiraatAcademic = true,
+        canAuditRecitations = true,
+        canTriggerManualSync = true,
+        description = "إدارة قطاع البنات: إدارة الحلقات، تعيين المحفظات، شؤون الطالبات، ورصد التسميع والغياب مع عزل تام عن البنين"
+      )
       UserRole.TEACHER -> RolePermissions(
         role = role,
         canManageStudents = true,

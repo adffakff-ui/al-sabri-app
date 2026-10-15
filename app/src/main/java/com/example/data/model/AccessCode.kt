@@ -132,6 +132,52 @@ object AccessCodeRegistry {
       scopeDescription = "ولي أمر الطالبة مريم (قسم البنات): متابعة إنجاز ابنته واستلام تقارير التسميع والتنبيهات المخصصة لها.",
       allowedPrivileges = listOf("متابعة بطاقة إنجاز الابنة مريم", "استلام تنبيهات FCM لمواعيد التسميع والغياب", "الاطلاع على تقارير الشيخة أم عبد الله"),
       restrictedPrivileges = listOf("غلق بيانات الطالبات والطلاب الآخرين", "منع التعديل على السجلات", "غلق أدوات الإشراف")
+    ),
+
+    // 10. حسابات الطلاب المعتمدة في منظومة الحلقات (QRN)
+    AccessCode(
+      code = "QRN-101",
+      role = UserRole.STUDENT,
+      userName = "عمر أحمد الشريف",
+      groupName = "حلقة الإمام الشاطبي",
+      studentId = 1010L,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "حساب الطالب عمر أحمد الشريف (حلقة الشاطبي): متابعة الحفظ، درجات التجويد، والنقاط.",
+      allowedPrivileges = listOf("استعراض سجل الحفظ اليومي", "متابعة رصيد النقاط والمواظبة"),
+      restrictedPrivileges = listOf("غلق بيانات سائر الطلاب", "منع التعديل")
+    ),
+    AccessCode(
+      code = "QRN-102",
+      role = UserRole.STUDENT,
+      userName = "فاطمة محمد السعيد",
+      groupName = "حلقة أم المؤمنين خديجة",
+      studentId = 1011L,
+      section = HalaqahSection.GIRLS,
+      scopeDescription = "حساب الطالبة فاطمة محمد السعيد (حلقة خديجة): متابعة الحفظ والتسميع.",
+      allowedPrivileges = listOf("استعراض سجل الحفظ اليومي", "متابعة رصيد النقاط والمواظبة"),
+      restrictedPrivileges = listOf("غلق بيانات سائر الطالبات", "غلق قسم البنين", "منع التعديل")
+    ),
+    AccessCode(
+      code = "QRN-103",
+      role = UserRole.STUDENT,
+      userName = "يوسف خالد العتيبي",
+      groupName = "حلقة الإمام نافع",
+      studentId = 1012L,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "حساب الطالب يوسف خالد العتيبي (حلقة نافع): متابعة جزء عم وتبارك.",
+      allowedPrivileges = listOf("استعراض سجل الحفظ اليومي"),
+      restrictedPrivileges = listOf("غلق بيانات سائر الطلاب", "منع التعديل")
+    ),
+    AccessCode(
+      code = "QRN-104",
+      role = UserRole.STUDENT,
+      userName = "مريم عبد الله الغامدي",
+      groupName = "حلقة الزهراء للفتيات",
+      studentId = 1013L,
+      section = HalaqahSection.GIRLS,
+      scopeDescription = "حساب الطالبة مريم عبد الله الغامدي (حلقة الزهراء): متابعة الختمة والتسميع.",
+      allowedPrivileges = listOf("استعراض سجل الحفظ اليومي", "متابعة رصيد النقاط 650"),
+      restrictedPrivileges = listOf("غلق بيانات سائر الطلاب", "منع التعديل")
     )
   )
 

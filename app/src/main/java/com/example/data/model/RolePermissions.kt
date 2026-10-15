@@ -141,7 +141,7 @@ object PermissionManager {
         canTriggerManualSync = true,
         description = "صلاحيات المطور التقني: إدارة البيانات والنسخ الاحتياطي وإعدادات النظام"
       )
-      UserRole.WEB_PORTAL -> RolePermissions(
+      UserRole.AI_ASSISTANT -> RolePermissions(
         role = role,
         canManageStudents = false,
         canRecordRecitation = false,
@@ -154,7 +154,7 @@ object PermissionManager {
         canAccessQiraatAcademic = true,
         canAuditRecitations = false,
         canTriggerManualSync = true,
-        description = "بوابة المنصة والموقع الإلكتروني المباشر عبر WebView مع إمكانية تحميل حزمة التثبيت"
+        description = "مساعد الذكاء الاصطناعي القرآني: استشارات التجويد، تفسير الآيات، وخطط الحفظ الذكية"
       )
     }
   }

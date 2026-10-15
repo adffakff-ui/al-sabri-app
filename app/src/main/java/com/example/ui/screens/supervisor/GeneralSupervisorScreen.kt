@@ -328,7 +328,7 @@ fun GeneralSupervisorScreen(
                       .padding(horizontal = 6.dp, vertical = 2.dp)
                   ) {
                     Text(
-                      text = "جاهزة للتثبيت",
+                      text = "جاهزة للتثبيت (32 ميغابايت)",
                       color = QuranGoldSecondary,
                       fontSize = 9.sp,
                       fontWeight = FontWeight.Bold
@@ -336,7 +336,7 @@ fun GeneralSupervisorScreen(
                   }
                 }
                 Text(
-                  text = "تطبيق مدمج يفتح الموقع مباشرة عبر WebView مع ربط Firebase كامل",
+                  text = "app/build/outputs/apk/debug/app-debug.apk (بحجم 32 ميغابايت) • متصل بسيرفر وقاعدة Firebase",
                   style = MaterialTheme.typography.bodySmall,
                   color = Color.White.copy(alpha = 0.85f),
                   fontSize = 11.sp
@@ -367,7 +367,7 @@ fun GeneralSupervisorScreen(
               )
               Spacer(modifier = Modifier.width(6.dp))
               Text(
-                text = "تحميل حزمة APK مباشرة",
+                text = "تحميل حزمة APK (32 ميغابايت)",
                 color = Color(0xFF382900),
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp

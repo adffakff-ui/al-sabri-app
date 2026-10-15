@@ -218,7 +218,7 @@ fun WebPortalScreen(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                  text = "تحميل APK",
+                  text = "تحميل APK (32 ميغابايت)",
                   color = Color(0xFF382900),
                   fontWeight = FontWeight.Bold,
                   fontSize = 11.sp

@@ -55,18 +55,9 @@ if (installBtn) {
   });
 }
 
-function showInstallInstructionsModal()
-
-
-  <!-- واجهة التطبيق الرئيسية (تظهر حسب الصلاحيات بعد تسجيل الدخول) -->
-  <div id="mainAppContent">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:#1e382d; padding:12px 16px; border-radius:10px; border: 1px solid #28503e;">
-      <div style="display:flex; gap:8px;">
-        <a href="/app-debug.apk" download="Manarat_AlQuran.apk" style="background:#0d6efd; color:#fff; text-decoration:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:bold; display:flex; align-items:center; gap:4px;">
-          <span>تحميل APK 📥</span>
-        </a>
-        <button onclick="logoutUser()" style="background:#dc3545; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:12px; font-family:inherit; font-weight:bold;">تسجيل الخروج 🚪</button>
-      </div>
+function showInstallInstructionsModal() {
+  alert('لتثبيت التطبيق على جهازك:\n- من متصفح Chrome أو Opera: انقر على قائمة المتصفح (⋮) ثم اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".\n- أو حمّل حزمة التثبيت الرسمية APK برابط مباشر.');
+}
 
 function installApp() {
     if (deferredPrompt) {

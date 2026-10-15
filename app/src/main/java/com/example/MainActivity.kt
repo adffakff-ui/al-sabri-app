@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
             } else {
               Scaffold(
                 topBar = {
-                  if (currentRole != UserRole.WEB_PORTAL) {
+                  if (currentRole != UserRole.AI_ASSISTANT) {
                     AppTopBar(
                       currentRole = currentRole,
                       authenticatedRole = authenticatedRole,
@@ -88,9 +88,9 @@ class MainActivity : ComponentActivity() {
                       viewModel = viewModel,
                       onInspectRole = { viewModel.setRole(it) }
                     )
-                    UserRole.WEB_PORTAL -> com.example.ui.screens.web.WebPortalScreen(
+                    UserRole.AI_ASSISTANT -> com.example.ui.screens.ai.QuranAiAssistantScreen(
                       viewModel = viewModel,
-                      onBackToAdmin = { viewModel.setRole(UserRole.SUPERVISOR) }
+                      onNavigateBack = { viewModel.setRole(UserRole.SUPERVISOR) }
                     )
                     UserRole.GIRLS_ADMIN -> com.example.ui.screens.girls.GirlsSectionAdminScreen(
                       viewModel = viewModel

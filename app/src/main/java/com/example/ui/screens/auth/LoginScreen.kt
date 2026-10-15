@@ -864,17 +864,17 @@ fun LoginScreen(
           ) {
             Button(
               onClick = {
-                viewModel.login(UserRole.WEB_PORTAL, "زائر المنصة")
+                viewModel.login(UserRole.AI_ASSISTANT, "مستخدم الذكاء الاصطناعي")
                 onLoginSuccess()
               },
               modifier = Modifier
                 .weight(1f)
                 .height(38.dp)
-                .testTag("login_launch_web_btn"),
+                .testTag("login_launch_ai_btn"),
               colors = ButtonDefaults.buttonColors(containerColor = QuranEmeraldDark),
               shape = RoundedCornerShape(10.dp)
             ) {
-              Text("🌐 المنصة (WebView)", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+              Text("🤖 الذكاء الاصطناعي", fontSize = 10.sp, fontWeight = FontWeight.Bold)
             }
 
             Button(
@@ -888,7 +888,7 @@ fun LoginScreen(
               colors = ButtonDefaults.buttonColors(containerColor = QuranGoldSecondary),
               shape = RoundedCornerShape(10.dp)
             ) {
-              Text("⬇️ تحميل APK", fontSize = 10.sp, color = Color(0xFF382900), fontWeight = FontWeight.Bold)
+              Text("⬇️ تحميل APK (32 ميغابايت)", fontSize = 10.sp, color = Color(0xFF382900), fontWeight = FontWeight.Bold)
             }
           }
         }

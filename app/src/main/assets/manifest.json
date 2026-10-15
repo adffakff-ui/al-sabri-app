@@ -1,21 +1,13 @@
 {
   "name": "حلقات هائل سعيد أنعم",
-  "short_name": "حلقات القرآن",
+  "short_name": "حلقات هائل",
   "description": "نظام المزامنة والصلاحيات - تحفيظ القرآن الكريم",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0F5132",
   "theme_color": "#0F5132",
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

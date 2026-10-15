@@ -14,6 +14,68 @@ object SampleDataProvider {
   val todayDate: String get() = dateFormat.format(Date())
 
   val sampleStudents = listOf(
+    // ================= طلاب منظومة حلقات هائل سعيد أنعم (QRN) =================
+    Student(
+      id = 1010,
+      name = "عمر أحمد الشريف",
+      phone = "0501234567",
+      parentName = "أحمد الشريف",
+      parentPhone = "0551122334",
+      groupName = "حلقة الإمام الشاطبي",
+      level = "خاتم",
+      currentSurah = "الملك",
+      currentAyah = 15,
+      memorizedJuzCount = 29,
+      avatarColorHex = 0xFF0D6850,
+      notes = "كود: QRN-101 • إتقان تام للمدود ومخارج الحروف • 380 نقطة",
+      isGirlsSection = false
+    ),
+    Student(
+      id = 1011,
+      name = "فاطمة محمد السعيد",
+      phone = "0559876543",
+      parentName = "محمد السعيد",
+      parentPhone = "0559876544",
+      groupName = "حلقة أم المؤمنين خديجة",
+      level = "متقدم",
+      currentSurah = "المجادلة",
+      currentAyah = 10,
+      memorizedJuzCount = 28,
+      avatarColorHex = 0xFF9333EA,
+      notes = "كود: QRN-102 • تلاوة خاشعة وأداء متميز • 420 نقطة",
+      isGirlsSection = true
+    ),
+    Student(
+      id = 1012,
+      name = "يوسف خالد العتيبي",
+      phone = "0543219876",
+      parentName = "خالد العتيبي",
+      parentPhone = "0543219877",
+      groupName = "حلقة الإمام نافع",
+      level = "مبتدئ",
+      currentSurah = "النبأ",
+      currentAyah = 30,
+      memorizedJuzCount = 30,
+      avatarColorHex = 0xFF195E63,
+      notes = "كود: QRN-103 • حفظ جزء عم وتبارك • 210 نقطة",
+      isGirlsSection = false
+    ),
+    Student(
+      id = 1013,
+      name = "مريم عبد الله الغامدي",
+      phone = "0561122334",
+      parentName = "عبد الله الغامدي",
+      parentPhone = "0561122335",
+      groupName = "حلقة الزهراء للفتيات",
+      level = "متقدم",
+      currentSurah = "البقرة",
+      currentAyah = 286,
+      memorizedJuzCount = 25,
+      avatarColorHex = 0xFFC99700,
+      notes = "كود: QRN-104 • ختم القرآن الكريم كاملاً • 650 نقطة",
+      isGirlsSection = true
+    ),
+
     // ================= طلاب قسم البنين =================
     Student(
       id = 1,

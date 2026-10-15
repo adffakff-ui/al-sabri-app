@@ -146,7 +146,7 @@ fun ApkDownloadDialog(
               )
             }
             Text(
-              text = "• معرف الحزمة: com.aistudio.akramquran.jtwkp\n• الإصدار: v1.0.0 (Release APK Architecture)\n• التوافق: أندرويد 7.0 حتى أندرويد 15+\n• الربط: متصل مباشرة بقاعدة وسيرفر Firebase ومتصفح WebView مدمج",
+              text = "• مسار الحزمة: app/build/outputs/apk/debug/app-debug.apk\n• الحجم الفعلي للحزمة: 32 ميغابايت (32 MB)\n• معرف الحزمة: com.aistudio.akramquran.jtwkp\n• الإصدار: v1.0.0 (جاهز للتشغيل والتثبيت المباشر)\n• التوافق: أندرويد 7.0 حتى أندرويد 15+\n• الرابط المباشر: $downloadUrl",
               fontSize = 11.sp,
               color = QuranEmeraldDark.copy(alpha = 0.9f),
               lineHeight = 16.sp
@@ -180,7 +180,7 @@ fun ApkDownloadDialog(
           )
           Spacer(modifier = Modifier.width(8.dp))
           Text(
-            text = "تحميل حزمة APK مباشرة الآن",
+            text = "تحميل حزمة APK مباشرة (32 ميغابايت)",
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp
           )

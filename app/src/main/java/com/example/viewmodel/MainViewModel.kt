@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 
 enum class UserRole(val title: String, val subtitle: String) {
   SUPERVISOR("المشرف العام", "الإدارة العليا والرقابة الشاملة وإدارة الصلاحيات"),
-  WEB_PORTAL("المنصة المباشرة (WebView)", "تصفح الموقع وسيرفر المنصة المباشر وتحميل الحزمة"),
+  AI_ASSISTANT("الذكاء الاصطناعي القرآني 🤖", "مساعد التجويد الذكي، تفسير وتدبر الآيات، واختبارات الحفظ الذكية"),
   GIRLS_ADMIN("إدارة حلقات البنات", "اللوحة الإدارية المستقلة لمشرفات ومعلمات قطاع البنات"),
   TEACHER("المعلم", "إدارة الحلقات والتسميع والغياب"),
   CIRCLES("الحلقات", "دليل حلقات التحفيظ والمعلمين"),
@@ -97,13 +97,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
   // Web Portal & APK Installation Package Management
   val defaultLiveServerUrl = "https://ais-dev-rx3fcxvtov7s2rmvspaiib-567265308769.europe-west3.run.app"
   val defaultOfflineAssetUrl = "file:///android_asset/index.html"
-  val defaultApkDownloadUrl = "https://ais-pre-rx3fcxvtov7s2rmvspaiib-567265308769.europe-west3.run.app"
+  val defaultApkDownloadUrl = "https://github.com/adffakff-ui/al-sabri-app/releases/latest/download/app-debug.apk"
+  val defaultApkReleasePage = "https://github.com/adffakff-ui/al-sabri-app/releases/tag/v1.0.0"
 
   private val _webServerUrl = MutableStateFlow(defaultLiveServerUrl)
   val webServerUrl: StateFlow<String> = _webServerUrl.asStateFlow()
 
   private val _apkDownloadUrl = MutableStateFlow(defaultApkDownloadUrl)
   val apkDownloadUrl: StateFlow<String> = _apkDownloadUrl.asStateFlow()
+
+  fun updateApkDownloadUrl(newUrl: String) {
+    if (newUrl.isNotBlank()) {
+      _apkDownloadUrl.value = newUrl.trim()
+    }
+  }
 
   fun updateWebServerUrl(newUrl: String) {
     if (newUrl.isNotBlank()) {
@@ -436,7 +443,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun setRole(role: UserRole): Boolean {
     val auth = _authenticatedRole.value
-    if (auth == UserRole.SUPERVISOR || auth == UserRole.DEVELOPER || role == UserRole.WEB_PORTAL || auth == role) {
+    if (auth == UserRole.SUPERVISOR || auth == UserRole.DEVELOPER || role == UserRole.AI_ASSISTANT || auth == role) {
       _currentRole.value = role
       return true
     }

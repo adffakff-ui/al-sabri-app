@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -200,7 +201,8 @@ fun StudentCard(
   onReciteClick: () -> Unit,
   onAttendanceClick: () -> Unit,
   onCardClick: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  onAiEvaluateClick: (() -> Unit)? = null
 ) {
   Card(
     modifier = modifier
@@ -371,6 +373,24 @@ fun StudentCard(
           )
           Spacer(modifier = Modifier.width(6.dp))
           Text(text = "تسجيل حضور", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        }
+
+        if (onAiEvaluateClick != null) {
+          IconButton(
+            onClick = onAiEvaluateClick,
+            modifier = Modifier
+              .size(38.dp)
+              .clip(RoundedCornerShape(10.dp))
+              .background(QuranGoldLight)
+              .testTag("ai_evaluate_btn_${student.id}")
+          ) {
+            Icon(
+              imageVector = Icons.Default.AutoAwesome,
+              contentDescription = "تقييم بالذكاء الاصطناعي",
+              tint = Color(0xFF6B4E00),
+              modifier = Modifier.size(18.dp)
+            )
+          }
         }
       }
     }

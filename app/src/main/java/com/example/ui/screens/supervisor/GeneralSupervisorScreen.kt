@@ -315,7 +315,7 @@ fun GeneralSupervisorScreen(
               Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                   Text(
-                    text = "حزمة التثبيت الأندرويد (APK) وبوابة المنصة",
+                    text = "حزمة التثبيت الأندرويد (APK) ومساعد الذكاء الاصطناعي",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -336,7 +336,7 @@ fun GeneralSupervisorScreen(
                   }
                 }
                 Text(
-                  text = "app/build/outputs/apk/debug/app-debug.apk (بحجم 32 ميغابايت) • متصل بسيرفر وقاعدة Firebase",
+                  text = "app/build/outputs/apk/debug/app-debug.apk (بحجم 32 ميغابايت) • مدعوم بمساعد الذكاء الاصطناعي القرآني",
                   style = MaterialTheme.typography.bodySmall,
                   color = Color.White.copy(alpha = 0.85f),
                   fontSize = 11.sp
@@ -345,7 +345,7 @@ fun GeneralSupervisorScreen(
             }
           }
 
-          // Action buttons: Download APK & Launch WebView
+          // Action buttons: Download APK & Launch AI Assistant
           Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -376,25 +376,25 @@ fun GeneralSupervisorScreen(
 
             Button(
               onClick = {
-                viewModel.setRole(UserRole.WEB_PORTAL)
-                onInspectRole(UserRole.WEB_PORTAL)
+                viewModel.setRole(UserRole.AI_ASSISTANT)
+                onInspectRole(UserRole.AI_ASSISTANT)
               },
-              colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.18f)),
+              colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.22f)),
               shape = RoundedCornerShape(10.dp),
               modifier = Modifier
                 .weight(1f)
                 .height(42.dp)
-                .testTag("admin_launch_web_btn")
+                .testTag("admin_launch_ai_btn")
             ) {
               Icon(
-                imageVector = Icons.Default.Language,
+                imageVector = Icons.Default.AutoAwesome,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(18.dp)
               )
               Spacer(modifier = Modifier.width(6.dp))
               Text(
-                text = "تصفح المنصة (WebView)",
+                text = "الذكاء الاصطناعي 🤖",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp

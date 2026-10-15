@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Equalizer
@@ -109,6 +110,7 @@ fun TeacherScreen(
   var studentForRecitation by remember { mutableStateOf<Student?>(null) }
   var studentForAttendance by remember { mutableStateOf<Student?>(null) }
   var studentToEdit by remember { mutableStateOf<Student?>(null) }
+  var studentForAiEvaluation by remember { mutableStateOf<Student?>(null) }
 
   if (showAttendanceReports) {
     AttendanceReportsScreen(
@@ -569,6 +571,76 @@ fun TeacherScreen(
         }
       }
 
+      // AI Student Evaluation Chatbot Banner for Teachers
+      item {
+        Card(
+          shape = RoundedCornerShape(16.dp),
+          colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFBF8EE)
+          ),
+          border = androidx.compose.foundation.BorderStroke(1.dp, QuranGoldSecondary.copy(alpha = 0.5f)),
+          modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+              val target = filteredStudents.firstOrNull() ?: students.firstOrNull()
+              studentForAiEvaluation = target
+            }
+            .testTag("ai_student_evaluation_banner")
+        ) {
+          Row(
+            modifier = Modifier.padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+          ) {
+            Row(
+              verticalAlignment = Alignment.CenterVertically,
+              modifier = Modifier.weight(1f)
+            ) {
+              Box(
+                modifier = Modifier
+                  .size(42.dp)
+                  .clip(CircleShape)
+                  .background(QuranGoldSecondary),
+                contentAlignment = Alignment.Center
+              ) {
+                Icon(
+                  imageVector = Icons.Default.AutoAwesome,
+                  contentDescription = null,
+                  tint = Color(0xFF382900),
+                  modifier = Modifier.size(22.dp)
+                )
+              }
+              Spacer(modifier = Modifier.width(10.dp))
+              Column {
+                Text(
+                  text = "دردشة الذكاء الاصطناعي لتقييم الطلاب 🤖",
+                  style = MaterialTheme.typography.titleSmall,
+                  fontWeight = FontWeight.Bold,
+                  color = Color(0xFF4A3700)
+                )
+                Text(
+                  text = "تحليل فوري لأداء الطالب وسجل تسميعه الصوتي وتقديم توصيات للمعلم",
+                  style = MaterialTheme.typography.bodySmall,
+                  color = Color(0xFF785600),
+                  fontSize = 11.sp
+                )
+              }
+            }
+            Button(
+              onClick = {
+                val target = filteredStudents.firstOrNull() ?: students.firstOrNull()
+                studentForAiEvaluation = target
+              },
+              colors = ButtonDefaults.buttonColors(containerColor = QuranEmeraldPrimary),
+              shape = RoundedCornerShape(10.dp),
+              modifier = Modifier.height(34.dp)
+            ) {
+              Text("تقييم ذكي ⚡", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+            }
+          }
+        }
+      }
+
       // Students List Header
       item {
         Row(
@@ -632,7 +704,8 @@ fun TeacherScreen(
               scope.launch {
                 snackbarHostState.showSnackbar("تم تحديد الطالب: ${student.name}")
               }
-            }
+            },
+            onAiEvaluateClick = { studentForAiEvaluation = student }
           )
         }
       }
@@ -705,6 +778,16 @@ fun TeacherScreen(
           snackbarHostState.showSnackbar("تم تسجيل حضور الطالب ${record.studentName} (${record.status})")
         }
       }
+    )
+  }
+
+  // Student AI Evaluation Chatbot Dialog
+  studentForAiEvaluation?.let { st ->
+    com.example.ui.components.StudentAiEvaluationDialog(
+      student = st,
+      recitations = recitations,
+      attendance = attendance,
+      onDismiss = { studentForAiEvaluation = null }
     )
   }
 }

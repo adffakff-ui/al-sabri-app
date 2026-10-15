@@ -94,14 +94,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
   private val _activeSection = MutableStateFlow(HalaqahSection.ALL)
   val activeSection: StateFlow<HalaqahSection> = _activeSection.asStateFlow()
 
-  // Web Portal & APK Installation Package Management
-  val defaultLiveServerUrl = "https://ais-dev-rx3fcxvtov7s2rmvspaiib-567265308769.europe-west3.run.app"
-  val defaultOfflineAssetUrl = "file:///android_asset/index.html"
+  // APK Installation Package Management
   val defaultApkDownloadUrl = "https://github.com/adffakff-ui/al-sabri-app/releases/latest/download/app-debug.apk"
   val defaultApkReleasePage = "https://github.com/adffakff-ui/al-sabri-app/releases/tag/v1.0.0"
-
-  private val _webServerUrl = MutableStateFlow(defaultLiveServerUrl)
-  val webServerUrl: StateFlow<String> = _webServerUrl.asStateFlow()
 
   private val _apkDownloadUrl = MutableStateFlow(defaultApkDownloadUrl)
   val apkDownloadUrl: StateFlow<String> = _apkDownloadUrl.asStateFlow()
@@ -110,20 +105,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     if (newUrl.isNotBlank()) {
       _apkDownloadUrl.value = newUrl.trim()
     }
-  }
-
-  fun updateWebServerUrl(newUrl: String) {
-    if (newUrl.isNotBlank()) {
-      _webServerUrl.value = newUrl.trim()
-    }
-  }
-
-  fun switchToOfflineAsset() {
-    _webServerUrl.value = defaultOfflineAssetUrl
-  }
-
-  fun switchToLiveServer() {
-    _webServerUrl.value = defaultLiveServerUrl
   }
 
   fun login(role: UserRole, userName: String) {

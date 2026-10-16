@@ -19,5 +19,6 @@ data class Student(
   val avatarColorHex: Long = 0xFF0D6850,
   val notes: String = "",
   val isGirlsSection: Boolean = false,
+  val associationId: String = "HAIEL_SAEED",
   val createdAt: Long = System.currentTimeMillis()
 )

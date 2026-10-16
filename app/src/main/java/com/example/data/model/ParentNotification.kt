@@ -15,5 +15,6 @@ data class ParentNotification(
   val notificationType: String = "تقرير يومي", // تقرير يومي, تنبيه غياب, إنجاز وتفوق, إشعار عام
   val date: String,
   val isSent: Boolean = true,
+  val associationId: String = "HAIEL_SAEED",
   val timestamp: Long = System.currentTimeMillis()
 )

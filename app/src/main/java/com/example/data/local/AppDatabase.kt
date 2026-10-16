@@ -18,7 +18,7 @@ import com.example.data.model.Student
     ParentNotification::class,
     RecitationSchedule::class
   ],
-  version = 4,
+  version = 5,
   exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

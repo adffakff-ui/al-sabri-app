@@ -12,5 +12,6 @@ data class AttendanceRecord(
   val date: String,
   val status: String = "حاضر", // حاضر, غائب, مستأذن, متأخر
   val notes: String = "",
+  val associationId: String = "HAIEL_SAEED",
   val timestamp: Long = System.currentTimeMillis()
 )

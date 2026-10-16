@@ -102,6 +102,18 @@ service cloud.firestore {
       }
     }
 
+    // ==========================================
+    // MULTI-TENANT DUAL ASSOCIATIONS ISOLATION
+    // (جمعية هائل سعيد أنعم vs جمعية معاذ الحروي)
+    // ==========================================
+    match /associations/{associationId} {
+      allow read, write: if isSignedIn() && (associationId == 'HAIEL_SAEED' || associationId == 'MUADH_JARWI');
+
+      match /{subCollection=**} {
+        allow read, write: if isSignedIn() && (associationId == 'HAIEL_SAEED' || associationId == 'MUADH_JARWI');
+      }
+    }
+
     // Fallback: deny all unspecified documents
     match /{document=**} {
       allow read, write: if false;

@@ -58,6 +58,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     GirlsFirestoreRepository()
   }
 
+  val associationFirestoreRepo: com.example.data.repository.AssociationFirestoreRepository by lazy {
+    com.example.data.repository.AssociationFirestoreRepository()
+  }
+
   // Verification state from Firestore for Girls section
   private val _girlsVerificationResult = MutableStateFlow<GirlsVerificationResult?>(null)
   val girlsVerificationResult: StateFlow<GirlsVerificationResult?> = _girlsVerificationResult.asStateFlow()
@@ -94,6 +98,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
   private val _activeSection = MutableStateFlow(HalaqahSection.ALL)
   val activeSection: StateFlow<HalaqahSection> = _activeSection.asStateFlow()
 
+  // Multi-Tenant Dual-Association State (جمعية هائل سعيد أنعم vs جمعية معاذ الجروي)
+  private val _selectedAssociation = MutableStateFlow(com.example.data.model.AssociationType.HAIEL_SAEED)
+  val selectedAssociation: StateFlow<com.example.data.model.AssociationType> = _selectedAssociation.asStateFlow()
+
+  fun setAssociation(assoc: com.example.data.model.AssociationType) {
+    _selectedAssociation.value = assoc
+    _selectedGroup.value = null
+  }
+
   // APK Installation Package Management
   val defaultApkDownloadUrl = "https://github.com/adffakff-ui/al-sabri-app/releases/latest/download/app-debug.apk"
   val defaultApkReleasePage = "https://github.com/adffakff-ui/al-sabri-app/releases/tag/v1.0.0"
@@ -115,8 +128,41 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     performSync()
   }
 
+  fun verifyAndLoginWithCode(codeStr: String, targetAssoc: com.example.data.model.AssociationType): Pair<Boolean, String> {
+    val (accessCode, errorMsg) = com.example.data.model.AccessCodeRegistry.findCodeForAssociation(codeStr, targetAssoc.id)
+    if (accessCode == null) {
+      return Pair(false, errorMsg ?: "كود الدخول غير مصرح به.")
+    }
+
+    _selectedAssociation.value = if (accessCode.associationId == "ALL") targetAssoc else com.example.data.model.AssociationType.fromId(accessCode.associationId)
+    loginWithAccessCode(accessCode)
+    syncCurrentAssociationToFirestore()
+    return Pair(true, "مرحباً ${accessCode.userName} • تم التحقق الأمني وتوجيه قاعدة البيانات للجمعية بنجاح 🛡️")
+  }
+
+  fun syncCurrentAssociationToFirestore() {
+    viewModelScope.launch {
+      try {
+        val currentAssoc = _selectedAssociation.value
+        val assocStudents = studentDao.getAllStudents().first().filter { it.associationId == currentAssoc.id }
+        val assocRecitations = recitationDao.getAllRecitations().first().filter { it.associationId == currentAssoc.id }
+        assocStudents.forEach { st ->
+          associationFirestoreRepo.saveStudentToAssociation(currentAssoc.id, st)
+        }
+        assocRecitations.take(15).forEach { rec ->
+          associationFirestoreRepo.saveRecitationToAssociation(currentAssoc.id, rec)
+        }
+      } catch (e: Exception) {
+        android.util.Log.w("MainViewModel", "Firestore association sync note: ${e.message}")
+      }
+    }
+  }
+
   fun loginWithAccessCode(accessCode: AccessCode) {
     _currentAccessCode.value = accessCode
+    if (accessCode.associationId != "ALL") {
+      _selectedAssociation.value = com.example.data.model.AssociationType.fromId(accessCode.associationId)
+    }
     val effectiveRole = if (accessCode.role == UserRole.GIRLS_ADMIN || accessCode.code == "SUP-GIRLS-200") {
       UserRole.GIRLS_ADMIN
     } else {
@@ -306,20 +352,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     _activeSection.value = HalaqahSection.ALL
   }
 
-  val students: StateFlow<List<Student>> = studentDao.getAllStudents()
+  val allStudentsRaw: StateFlow<List<Student>> = studentDao.getAllStudents()
     .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-  val attendance: StateFlow<List<AttendanceRecord>> = attendanceDao.getAllAttendance()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+  val students: StateFlow<List<Student>> = combine(allStudentsRaw, _selectedAssociation) { list, assoc ->
+    list.filter { it.associationId == assoc.id }
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-  val recitations: StateFlow<List<RecitationRecord>> = recitationDao.getAllRecitations()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+  val attendance: StateFlow<List<AttendanceRecord>> = combine(attendanceDao.getAllAttendance(), _selectedAssociation) { list, assoc ->
+    list.filter { it.associationId == assoc.id }
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-  val notifications: StateFlow<List<ParentNotification>> = notificationDao.getAllNotifications()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+  val recitations: StateFlow<List<RecitationRecord>> = combine(recitationDao.getAllRecitations(), _selectedAssociation) { list, assoc ->
+    list.filter { it.associationId == assoc.id }
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-  val schedules: StateFlow<List<RecitationSchedule>> = scheduleDao.getAllSchedules()
-    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+  val notifications: StateFlow<List<ParentNotification>> = combine(notificationDao.getAllNotifications(), _selectedAssociation) { list, assoc ->
+    list.filter { it.associationId == assoc.id }
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+  val schedules: StateFlow<List<RecitationSchedule>> = combine(scheduleDao.getAllSchedules(), _selectedAssociation) { list, assoc ->
+    list.filter { it.associationId == assoc.id }
+  }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
   // Dynamic state for custom Girls Halaqat added by supervisors
   private val _customGirlsHalaqat = MutableStateFlow<List<QuranHalaqah>>(emptyList())
@@ -465,14 +519,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun addStudent(student: Student) {
     viewModelScope.launch {
-      studentDao.insertStudent(student)
+      val st = if (student.associationId.isBlank() || student.associationId == "HAIEL_SAEED") {
+        student.copy(associationId = _selectedAssociation.value.id)
+      } else {
+        student
+      }
+      studentDao.insertStudent(st)
       performSync()
     }
   }
 
   fun enrollGirlsStudent(student: Student) {
     viewModelScope.launch {
-      studentDao.insertStudent(student.copy(isGirlsSection = true))
+      studentDao.insertStudent(
+        student.copy(
+          isGirlsSection = true,
+          associationId = _selectedAssociation.value.id
+        )
+      )
       performSync()
     }
   }
@@ -516,8 +580,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun recordAttendance(record: AttendanceRecord) {
     viewModelScope.launch {
-      attendanceDao.deleteByStudentAndDate(record.studentId, record.date)
-      attendanceDao.insertAttendance(record)
+      val scopedRecord = record.copy(associationId = _selectedAssociation.value.id)
+      attendanceDao.deleteByStudentAndDate(scopedRecord.studentId, scopedRecord.date)
+      attendanceDao.insertAttendance(scopedRecord)
       performSync()
     }
   }
@@ -532,7 +597,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
           studentName = student.name,
           date = date,
           status = "غائب",
-          notes = reason
+          notes = reason,
+          associationId = _selectedAssociation.value.id
         )
       )
 
@@ -556,7 +622,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
           message = "نحيطكم علماً بتسجيل غياب الطالب/الطالبة (${student.name}) عن (${student.groupName}) بتاريخ $date. نرجو التواصل مع معلم الحلقة للاطمئنان والتنسيق.",
           notificationType = "تنبيه غياب",
           date = date,
-          isSent = true
+          isSent = true,
+          associationId = _selectedAssociation.value.id
         )
       )
 
@@ -566,12 +633,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun recordRecitation(record: RecitationRecord) {
     viewModelScope.launch {
-      recitationDao.insertRecitation(record)
-      val student = studentDao.getStudentById(record.studentId)
-      if (student != null && record.recitationType == "حفظ جديد") {
+      val scopedRecord = record.copy(associationId = _selectedAssociation.value.id)
+      recitationDao.insertRecitation(scopedRecord)
+      val student = studentDao.getStudentById(scopedRecord.studentId)
+      if (student != null && scopedRecord.recitationType == "حفظ جديد") {
         val updated = student.copy(
-          currentSurah = record.surahName,
-          currentAyah = record.toAyah
+          currentSurah = scopedRecord.surahName,
+          currentAyah = scopedRecord.toAyah
         )
         studentDao.updateStudent(updated)
         if (_selectedStudent.value?.id == student.id) {
@@ -584,16 +652,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
   fun sendNotification(notification: ParentNotification) {
     viewModelScope.launch {
-      notificationDao.insertNotification(notification)
+      val scopedNotif = notification.copy(associationId = _selectedAssociation.value.id)
+      notificationDao.insertNotification(scopedNotif)
       performSync()
     }
   }
 
   fun scheduleRecitation(schedule: RecitationSchedule, sendFcmAlert: Boolean = true) {
     viewModelScope.launch {
-      val id = scheduleDao.insertSchedule(schedule)
+      val scopedSchedule = schedule.copy(associationId = _selectedAssociation.value.id)
+      val id = scheduleDao.insertSchedule(scopedSchedule)
       if (sendFcmAlert) {
-        val savedSchedule = schedule.copy(id = id)
+        val savedSchedule = scopedSchedule.copy(id = id)
         // 1. Dispatch Firebase Cloud Messaging (FCM) automated push notification
         FcmNotificationManager.dispatchScheduleFcmNotification(getApplication(), savedSchedule)
 
@@ -608,7 +678,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             message = notifMessage,
             notificationType = "موعد تسميع مجدول",
             date = SampleDataProvider.todayDate,
-            isSent = true
+            isSent = true,
+            associationId = _selectedAssociation.value.id
           )
         )
       }

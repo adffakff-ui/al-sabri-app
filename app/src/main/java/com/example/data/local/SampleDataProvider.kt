@@ -258,6 +258,88 @@ object SampleDataProvider {
       avatarColorHex = 0xFF831843,
       notes = "همة عالية ومراجعة مستمرة بدون أخطاء",
       isGirlsSection = true
+    ),
+
+    // ================= طلاب جمعية معاذ الجروي لصيانة وخدمة القرآن الكريم =================
+    Student(
+      id = 2001,
+      name = "بلال عاصم الجروي",
+      phone = "0559876543",
+      parentName = "عاصم الجروي",
+      parentPhone = "0559876544",
+      groupName = "حلقة معاذ بن جبل رضي الله عنه",
+      level = "خاتم",
+      currentSurah = "النساء",
+      currentAyah = 100,
+      memorizedJuzCount = 30,
+      avatarColorHex = 0xFF1E3A8A,
+      notes = "طالب متميز في جمع القراءات وضبط المصاحف وصيانتها",
+      isGirlsSection = false,
+      associationId = "MUADH_JARWI"
+    ),
+    Student(
+      id = 2002,
+      name = "صهيب منير الحروي",
+      phone = "0541122334",
+      parentName = "منير الحروي",
+      parentPhone = "0541122335",
+      groupName = "حلقة الإمام نافع المدني",
+      level = "متقدم",
+      currentSurah = "آل عمران",
+      currentAyah = 80,
+      memorizedJuzCount = 20,
+      avatarColorHex = 0xFF0284C7,
+      notes = "إتقان فائق لأصول رواية ورش وقالون عن نافع",
+      isGirlsSection = false,
+      associationId = "MUADH_JARWI"
+    ),
+    Student(
+      id = 2003,
+      name = "حمزة زكريا البكري",
+      phone = "0563344556",
+      parentName = "زكريا البكري",
+      parentPhone = "0563344557",
+      groupName = "حلقة الترتيل والإتقان الصوتي",
+      level = "متوسط",
+      currentSurah = "الكهف",
+      currentAyah = 110,
+      memorizedJuzCount = 15,
+      avatarColorHex = 0xFF0F766E,
+      notes = "صوت ندي خاشع وتحسن ملحوظ في أحكام الراءات",
+      isGirlsSection = false,
+      associationId = "MUADH_JARWI"
+    ),
+    Student(
+      id = 2004,
+      name = "أروى صالح الشامي",
+      phone = "0578899001",
+      parentName = "صالح الشامي",
+      parentPhone = "0578899002",
+      groupName = "حلقة صيانة المصحف والضبط",
+      level = "متقدم",
+      currentSurah = "مريم",
+      currentAyah = 50,
+      memorizedJuzCount = 18,
+      avatarColorHex = 0xFF7C3AED,
+      notes = "متفوقة في علم رسم المصحف العثماني والضبط القرآني",
+      isGirlsSection = true,
+      associationId = "MUADH_JARWI"
+    ),
+    Student(
+      id = 2005,
+      name = "أنس حسان القحطاني",
+      phone = "0539988776",
+      parentName = "حسان القحطاني",
+      parentPhone = "0539988777",
+      groupName = "حلقة معاذ بن جبل رضي الله عنه",
+      level = "مبتدئ",
+      currentSurah = "النبأ",
+      currentAyah = 40,
+      memorizedJuzCount = 3,
+      avatarColorHex = 0xFF0369A1,
+      notes = "حفظ متقن لجزء عم مع تطبيق الغنن",
+      isGirlsSection = false,
+      associationId = "MUADH_JARWI"
     )
   )
 
@@ -342,6 +424,53 @@ object SampleDataProvider {
       date = todayDate,
       status = "غائبة",
       notes = "عذر مرضي بعلم المعلمة"
+    ),
+
+    // ================= حضور طلاب جمعية معاذ الجروي لصيانة القرآن =================
+    AttendanceRecord(
+      id = 201,
+      studentId = 2001,
+      studentName = "بلال عاصم الجروي",
+      date = todayDate,
+      status = "حاضر",
+      notes = "حضور مبكر وإتقان فائق",
+      associationId = "MUADH_JARWI"
+    ),
+    AttendanceRecord(
+      id = 202,
+      studentId = 2002,
+      studentName = "صهيب منير الحروي",
+      date = todayDate,
+      status = "حاضر",
+      notes = "",
+      associationId = "MUADH_JARWI"
+    ),
+    AttendanceRecord(
+      id = 203,
+      studentId = 2003,
+      studentName = "حمزة زكريا البكري",
+      date = todayDate,
+      status = "حاضر",
+      notes = "",
+      associationId = "MUADH_JARWI"
+    ),
+    AttendanceRecord(
+      id = 204,
+      studentId = 2004,
+      studentName = "أروى صالح الشامي",
+      date = todayDate,
+      status = "حاضرة",
+      notes = "",
+      associationId = "MUADH_JARWI"
+    ),
+    AttendanceRecord(
+      id = 205,
+      studentId = 2005,
+      studentName = "أنس حسان القحطاني",
+      date = todayDate,
+      status = "متأخر",
+      notes = "تأخر بعذر مقبول",
+      associationId = "MUADH_JARWI"
     )
   )
 
@@ -458,6 +587,53 @@ object SampleDataProvider {
       mistakesCount = 0,
       tajweedScore = 10,
       teacherNotes = "إتقان فائق وختام السورة بالسند المعتمد"
+    ),
+
+    // ================= تسميع طلاب جمعية معاذ الجروي لصيانة القرآن =================
+    RecitationRecord(
+      id = 201,
+      studentId = 2001,
+      studentName = "بلال عاصم الجروي",
+      date = todayDate,
+      recitationType = "حفظ جديد",
+      surahName = "النساء",
+      fromAyah = 95,
+      toAyah = 100,
+      evaluation = "ممتاز",
+      mistakesCount = 0,
+      tajweedScore = 10,
+      teacherNotes = "تلاوة متقنة برواية ورش عن نافع مع ضبط الرسم العثماني",
+      associationId = "MUADH_JARWI"
+    ),
+    RecitationRecord(
+      id = 202,
+      studentId = 2002,
+      studentName = "صهيب منير الحروي",
+      date = todayDate,
+      recitationType = "مراجعة كبرى",
+      surahName = "آل عمران",
+      fromAyah = 70,
+      toAyah = 80,
+      evaluation = "ممتاز",
+      mistakesCount = 0,
+      tajweedScore = 10,
+      teacherNotes = "إتقان فائق لأحكام المدود ومخارج اللسان",
+      associationId = "MUADH_JARWI"
+    ),
+    RecitationRecord(
+      id = 203,
+      studentId = 2003,
+      studentName = "حمزة زكريا البكري",
+      date = todayDate,
+      recitationType = "حفظ جديد",
+      surahName = "الكهف",
+      fromAyah = 100,
+      toAyah = 110,
+      evaluation = "جيد جداً",
+      mistakesCount = 1,
+      tajweedScore = 9,
+      teacherNotes = "أداء خاشع وتحسن كبير في القلقلة",
+      associationId = "MUADH_JARWI"
     )
   )
 

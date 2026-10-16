@@ -95,10 +95,12 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
   viewModel: MainViewModel,
   onLoginSuccess: () -> Unit,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  onBackToAssociationSelect: (() -> Unit)? = null
 ) {
   val scope = rememberCoroutineScope()
   val students by viewModel.students.collectAsStateWithLifecycle()
+  val currentAssoc by viewModel.selectedAssociation.collectAsStateWithLifecycle()
 
   var selectedTab by remember { mutableIntStateOf(0) } // 0: Supervisor, 1: Teacher, 2: Student/Parent
 
@@ -140,7 +142,22 @@ fun LoginScreen(
         .padding(horizontal = 20.dp, vertical = 24.dp),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
-      Spacer(modifier = Modifier.height(16.dp))
+      if (onBackToAssociationSelect != null) {
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.Start
+        ) {
+          OutlinedButton(
+            onClick = onBackToAssociationSelect,
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.6f)),
+            shape = RoundedCornerShape(12.dp)
+          ) {
+            Text("← تغيير الجمعية / الدخول بالكود الموجه", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+          }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+      }
 
       // Logo & Brand Header
       Box(
@@ -164,10 +181,11 @@ fun LoginScreen(
       Spacer(modifier = Modifier.height(12.dp))
 
       Text(
-        text = "حلقات هائل سعيد أنعم",
+        text = currentAssoc.fullName,
         style = MaterialTheme.typography.headlineSmall,
         fontWeight = FontWeight.Bold,
-        color = Color.White
+        color = Color.White,
+        textAlign = TextAlign.Center
       )
       Text(
         text = "بوابة تسجيل الدخول وتحديد الصلاحيات المخصصة",

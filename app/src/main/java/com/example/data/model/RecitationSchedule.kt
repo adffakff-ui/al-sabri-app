@@ -22,5 +22,6 @@ data class RecitationSchedule(
   val status: String = "مجدول", // مجدول, مكتمل, معتذر, مؤجل
   val fcmNotificationSent: Boolean = true,
   val fcmMessageId: String = "fcm_msg_${System.currentTimeMillis()}",
+  val associationId: String = "HAIEL_SAEED",
   val timestamp: Long = System.currentTimeMillis()
 )

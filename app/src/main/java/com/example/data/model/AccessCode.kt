@@ -11,7 +11,8 @@ data class AccessCode(
   val section: HalaqahSection = HalaqahSection.ALL,
   val scopeDescription: String,
   val allowedPrivileges: List<String>,
-  val restrictedPrivileges: List<String>
+  val restrictedPrivileges: List<String>,
+  val associationId: String = "HAIEL_SAEED"
 )
 
 object AccessCodeRegistry {
@@ -177,13 +178,137 @@ object AccessCodeRegistry {
       section = HalaqahSection.GIRLS,
       scopeDescription = "حساب الطالبة مريم عبد الله الغامدي (حلقة الزهراء): متابعة الختمة والتسميع.",
       allowedPrivileges = listOf("استعراض سجل الحفظ اليومي", "متابعة رصيد النقاط 650"),
-      restrictedPrivileges = listOf("غلق بيانات سائر الطلاب", "منع التعديل")
+      restrictedPrivileges = listOf("غلق بيانات سائر الطلاب", "منع التعديل"),
+      associationId = "HAIEL_SAEED"
+    ),
+
+    // =========================================================================
+    // منظومة جمعية معاذ الجروي لصيانة وخدمة القرآن الكريم (أمان معزول تام)
+    // =========================================================================
+    AccessCode(
+      code = "MJ-ADMIN-990",
+      role = UserRole.SUPERVISOR,
+      userName = "فضيلة الشيخ معاذ بن عبد الله الجروي (المشرف العام)",
+      groupName = null,
+      studentId = null,
+      section = HalaqahSection.ALL,
+      scopeDescription = "المشرف العام لجمعية معاذ الجروي: إدارة شاملة لحلقات الجمعية، صيانة المصاحف، الإتقان الصوتي، والرقابة على المعلمين.",
+      allowedPrivileges = listOf("الإشراف الكامل على حلقات جمعية معاذ الجروي", "اعتماد تقارير صيانة المصاحف", "متابعة إتقان الطلاب والتسميع", "إصدار التعاميم الإدارية"),
+      restrictedPrivileges = listOf("حجب كامل لبيانات جمعية هائل سعيد أنعم منعاً للتداخل"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-CARE-100",
+      role = UserRole.SUPERVISOR,
+      userName = "المهندس أسامة الجروي (مشرف وحدة صيانة المصاحف والضبط)",
+      groupName = "حلقة صيانة المصحف والضبط",
+      studentId = null,
+      section = HalaqahSection.ALL,
+      scopeDescription = "مشرف وحدة صيانة المصاحف: متابعة دورات ترميم وضبط المصاحف الشريفة وورش التجليد والخط القرآني.",
+      allowedPrivileges = listOf("متابعة حلقات صيانة المصاحف", "تقييم المتدربين في علم الضبط والرسم"),
+      restrictedPrivileges = listOf("بيانات الجمعية الأخرى محجوبة"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-TCH-01",
+      role = UserRole.TEACHER,
+      userName = "الشيخ إبراهيم المدني (معلم حلقة معاذ بن جبل)",
+      groupName = "حلقة معاذ بن جبل رضي الله عنه",
+      studentId = null,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "معلم حلقة معاذ بن جبل: صلاحيات محصورة بحلقته في جمعية معاذ الجروي فقط.",
+      allowedPrivileges = listOf("رصد تسميع طلاب حلقة معاذ", "تحضير الحضور والغياب", "تقييم الأداء الصوتي بالذكاء الاصطناعي"),
+      restrictedPrivileges = listOf("سائر الحلقات الأخرى مغلقة", "بيانات جمعية هائل سعيد أنعم محجوبة بالكامل"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-TCH-02",
+      role = UserRole.TEACHER,
+      userName = "الشيخ عبد الحكيم نافع (معلم حلقة الإمام نافع المدني)",
+      groupName = "حلقة الإمام نافع المدني",
+      studentId = null,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "معلم حلقة الإمام نافع: تدريس روايتي ورش وقالون وتحفيظ الطلاب.",
+      allowedPrivileges = listOf("تسميع طلاب حلقة نافع", "رصد الحضور والغياب"),
+      restrictedPrivileges = listOf("بيانات جمعية هائل سعيد محجوبة"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-PAR-2001",
+      role = UserRole.PARENT,
+      userName = "عاصم الجروي (ولي أمر الطالب بلال)",
+      groupName = "حلقة معاذ بن جبل رضي الله عنه",
+      studentId = 2001L,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "ولي أمر الطالب بلال عاصم الجروي: متابعة إنجاز ابنه فقط بجمعية معاذ الجروي.",
+      allowedPrivileges = listOf("متابعة تقرير التسميع والحضور للابن بلال", "استلام تنبيهات FCM"),
+      restrictedPrivileges = listOf("بيانات جميع الطلاب الآخرين محجوبة"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-STU-2001",
+      role = UserRole.STUDENT,
+      userName = "بلال عاصم الجروي",
+      groupName = "حلقة معاذ بن جبل رضي الله عنه",
+      studentId = 2001L,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "حساب الطالب بلال عاصم الجروي (خاتم للقرآن ومتقن لضبط المصاحف).",
+      allowedPrivileges = listOf("عرض سجل الحفظ والإتقان الصوتي الشخصي"),
+      restrictedPrivileges = listOf("بيانات باقي الطلاب محجوبة"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    AccessCode(
+      code = "MJ-STU-2002",
+      role = UserRole.STUDENT,
+      userName = "صهيب منير الحروي",
+      groupName = "حلقة الإمام نافع المدني",
+      studentId = 2002L,
+      section = HalaqahSection.BOYS,
+      scopeDescription = "حساب الطالب صهيب منير الحروي (حلقة نافع المدني).",
+      allowedPrivileges = listOf("عرض سجل الحفظ والتسميع"),
+      restrictedPrivileges = listOf("بيانات باقي الطلاب محجوبة"),
+      associationId = "MUADH_JARWI"
+    ),
+
+    // =========================================================================
+    // كود المشرف المركزي ومطور النظام (إشراف تدقيقي معزول للمنظومتين)
+    // =========================================================================
+    AccessCode(
+      code = "SUPER-QURAN-2026",
+      role = UserRole.DEVELOPER,
+      userName = "المهندس المشرف العام على المنظومات القرآنية",
+      groupName = null,
+      studentId = null,
+      section = HalaqahSection.ALL,
+      scopeDescription = "المشرف التقني المركزي: إدارة النظام، فحص الأمان والعزل البياني بين الجمعيتين، وإجراء المزامنة والنسخ الاحتياطي.",
+      allowedPrivileges = listOf("التبديل المرن بين الجمعيتين للتدقيق", "إدارة وتأكيد أمان البيانات", "التحكم في النسخ الاحتياطي"),
+      restrictedPrivileges = emptyList(),
+      associationId = "ALL"
     )
   )
 
   fun findCode(inputCode: String): AccessCode? {
     val clean = inputCode.trim().uppercase()
     return defaultCodes.firstOrNull { it.code.uppercase() == clean }
+  }
+
+  fun findCodeForAssociation(inputCode: String, targetAssocId: String): Pair<AccessCode?, String?> {
+    val clean = inputCode.trim().uppercase()
+    val found = defaultCodes.firstOrNull { it.code.uppercase() == clean }
+    if (found == null) {
+      return Pair(null, "كود الدخول غير صحيح. يرجى التحقق من الكود المعتمد من المشرف العام.")
+    }
+    if (found.associationId != "ALL" && found.associationId != targetAssocId) {
+      val assignedName = if (found.associationId == "HAIEL_SAEED") "جمعية هائل سعيد أنعم" else "جمعية معاذ الحروي"
+      return Pair(null, "🔒 تنبيه أمني: هذا الكود مخصص لـ ($assignedName) ولا يمكن استخدامه للدخول إلى هذه الجمعية منعاً لتداخل البيانات والإشراف.")
+    }
+    return Pair(found, null)
   }
 
   fun generateCustomCode(

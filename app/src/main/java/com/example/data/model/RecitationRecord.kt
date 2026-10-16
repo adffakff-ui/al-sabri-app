@@ -22,5 +22,6 @@ data class RecitationRecord(
   val qariReferenceName: String = "الشيخ محمود خليل الحصري",
   val audioFilePath: String? = null, // مسار التسجيل الصوتي للطالب
   val teacherNotes: String = "",
+  val associationId: String = "HAIEL_SAEED",
   val timestamp: Long = System.currentTimeMillis()
 )

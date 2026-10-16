@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.components.AppTopBar
+import com.example.ui.screens.auth.InitialAssociationSelectionScreen
 import com.example.ui.screens.auth.LoginScreen
 import com.example.ui.screens.circles.CirclesScreen
 import com.example.ui.screens.developer.DeveloperScreen
@@ -44,16 +45,26 @@ class MainActivity : ComponentActivity() {
           val authenticatedRole by viewModel.authenticatedRole.collectAsStateWithLifecycle()
           val syncState by viewModel.syncState.collectAsStateWithLifecycle()
           var showGirlsAuthDialog by remember { mutableStateOf(false) }
+          var showAdvancedLogin by remember { mutableStateOf(false) }
 
           Crossfade(
             targetState = isLoggedIn,
             label = "auth_screen_transition"
           ) { loggedIn ->
             if (!loggedIn) {
-              LoginScreen(
-                viewModel = viewModel,
-                onLoginSuccess = {}
-              )
+              if (showAdvancedLogin) {
+                LoginScreen(
+                  viewModel = viewModel,
+                  onLoginSuccess = {},
+                  onBackToAssociationSelect = { showAdvancedLogin = false }
+                )
+              } else {
+                InitialAssociationSelectionScreen(
+                  viewModel = viewModel,
+                  onLoginSuccess = {},
+                  onSwitchToAdvancedLogin = { showAdvancedLogin = true }
+                )
+              }
             } else {
               Scaffold(
                 topBar = {
@@ -62,6 +73,7 @@ class MainActivity : ComponentActivity() {
                       currentRole = currentRole,
                       authenticatedRole = authenticatedRole,
                       syncState = syncState,
+                      association = viewModel.selectedAssociation.collectAsStateWithLifecycle().value,
                       onSyncClick = { viewModel.performSync() },
                       onRoleSelected = { role ->
                         if (role == UserRole.GIRLS_ADMIN && !viewModel.isGirlsSectionAuthorized()) {
@@ -70,7 +82,10 @@ class MainActivity : ComponentActivity() {
                           viewModel.setRole(role)
                         }
                       },
-                      onLogoutClick = { viewModel.logout() }
+                      onLogoutClick = {
+                        viewModel.logout()
+                        showAdvancedLogin = false
+                      }
                     )
                   }
                 },

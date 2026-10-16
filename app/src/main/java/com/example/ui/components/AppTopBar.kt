@@ -74,6 +74,7 @@ fun AppTopBar(
   currentRole: UserRole,
   authenticatedRole: UserRole = currentRole,
   syncState: SyncState? = null,
+  association: com.example.data.model.AssociationType? = null,
   onSyncClick: (() -> Unit)? = null,
   onRoleSelected: (UserRole) -> Unit,
   onLogoutClick: (() -> Unit)? = null,
@@ -139,17 +140,18 @@ fun AppTopBar(
 
         Column {
           Text(
-            text = "حلقات هائل سعيد أنعم",
+            text = association?.shortName ?: "حلقات هائل سعيد أنعم",
             style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp
           )
           Text(
-            text = "لتحفيظ القرآن الكريم • نظام المزامنة والصلاحيات",
+            text = association?.motto ?: "لتحفيظ القرآن الكريم • نظام المزامنة والصلاحيات",
             style = MaterialTheme.typography.bodySmall,
             color = QuranGoldSecondary,
-            fontSize = 11.sp
+            fontSize = 11.sp,
+            maxLines = 1
           )
         }
       }
